@@ -13,11 +13,11 @@
     </parent>
 
     <groupId>es.upm.miw</groupId>
-    <artifactId>iwvg-devops-template</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <artifactId>iwvg-devops-miguel-antonio</artifactId>
+    <version>.6.0.0</version>
     <packaging>jar</packaging>
     <name>${project.groupId}.${project.artifactId}</name>
-    <url>http://github.com/miw-upm/${project.artifactId}</url>
+    <url>http://github.com/antomihe/${project.artifactId}</url>
 
     <licenses>
         <license>
@@ -28,9 +28,9 @@
 
     <developers>
         <developer>
-            <name>Jesus Bernal</name>
-            <id>J.Bernal</id>
-            <email>j.bernal@upm.es</email>
+            <name>Antonio Miguel Herrero</name>
+            <id>AMH</id>
+            <email>antonio.mherrero@alumnos.upm.es</email>
             <organization>MIW UPM</organization>
             <roles>
                 <role>Architect</role>
