@@ -2,8 +2,8 @@
 ## Ingeniería Web: Visión General (IWVG) DevOps
 > Este proyecto es un apoyo docente de la asignatura. Cada release liberada corresponde al código utilizado en clase del curso indicado
 
-[![GitHub](https://img.shields.io/github/license/miw-upm/iwvg-devops?color=informational)](https://github.com/miw-upm/iwvg-devops/blob/develop/LICENSE.md)
-[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/antomihe/iwvg-devops-miguel-antonio?color=informational)](https://github.com/miw-upm/iwvg-devops/releases)
+[![GitHub](https://img.shields.io/github/license/antomihe/iwvg-devops-miguel-antonio?color=informational)](https://github.com/antomihe/iwvg-devops-miguel-antonio/blob/develop/LICENSE.md)
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/antomihe/iwvg-devops-miguel-antonio?color=informational)](https://github.com/antomihe/iwvg-devops-miguel-antonio/releases)
 ![GitHub Release Date](https://img.shields.io/github/release-date/antomihe/iwvg-devops-miguel-antonio?color=informational)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/antomihe/iwvg-devops-miguel-antonio)
 ![GitHub issues](https://img.shields.io/github/issues/antomihe/iwvg-devops-miguel-antonio?color=important)
