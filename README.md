@@ -3,11 +3,11 @@
 > Este proyecto es un apoyo docente de la asignatura. Cada release liberada corresponde al código utilizado en clase del curso indicado
 
 [![GitHub](https://img.shields.io/github/license/miw-upm/iwvg-devops?color=informational)](https://github.com/miw-upm/iwvg-devops/blob/develop/LICENSE.md)
-[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/miw-upm/iwvg-devops?color=informational)](https://github.com/miw-upm/iwvg-devops/releases)
-![GitHub Release Date](https://img.shields.io/github/release-date/miw-upm/iwvg-devops?color=informational)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/miw-upm/iwvg-devops)
-![GitHub issues](https://img.shields.io/github/issues/miw-upm/iwvg-devops?color=important)
-![GitHub closed issues](https://img.shields.io/github/issues-closed/miw-upm/iwvg-devops?color=informational)
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/antomihe/iwvg-devops-miguel-antonio?color=informational)](https://github.com/miw-upm/iwvg-devops/releases)
+![GitHub Release Date](https://img.shields.io/github/release-date/antomihe/iwvg-devops-miguel-antonio?color=informational)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/antomihe/iwvg-devops-miguel-antonio)
+![GitHub issues](https://img.shields.io/github/issues/antomihe/iwvg-devops-miguel-antonio?color=important)
+![GitHub closed issues](https://img.shields.io/github/issues-closed/antomihe/iwvg-devops-miguel-antonio?color=informational)
 
 ### Estado del código
 [![DevOps](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-integration.yml)
