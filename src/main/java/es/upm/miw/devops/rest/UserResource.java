@@ -44,4 +44,15 @@ public class UserResource {
                 .filter(user -> billable == null || user.isBillable() == billable)
                 .map(UserDto::new);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        if (!this.userRepository.existsById(id)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User id not found: " + id
+            );
+        }
+        this.userRepository.deleteById(id);
+    }
 }
