@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -42,6 +43,18 @@ class ApiExceptionHandlerTest {
         assertEquals(404, errorMessage.getCode());
         assertEquals("RuntimeException", errorMessage.getError());
         assertEquals("Route not found. Try: /actuator/info or /swagger-ui.html", errorMessage.getMessage());
+    }
+
+    @Test
+    void testHandleHttpMessageNotReadableException() {
+        ApiExceptionHandler apiExceptionHandler = new ApiExceptionHandler();
+        HttpMessageNotReadableException exception = new HttpMessageNotReadableException("Body missing");
+
+        ErrorMessage errorMessage = apiExceptionHandler.handleHttpMessageNotReadableException(exception);
+
+        assertNotNull(errorMessage);
+        assertEquals(400, errorMessage.getCode());
+        assertEquals("HttpMessageNotReadableException", errorMessage.getError());
     }
 
     @Test
