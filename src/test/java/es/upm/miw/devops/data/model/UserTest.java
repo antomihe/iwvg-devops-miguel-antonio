@@ -89,67 +89,67 @@ class UserTest {
         assertTrue(user.isBillable());
     }
 
-    @Test
-    void testIsBillableFalseWhenFirstNameInvalid() {
-        User user = new User(1L, "Antonio", "antonio@example.com", null, "Herrero", "12345678Z", "Calle 1", "Madrid", "Madrid", "28001");
-        assertFalse(user.isBillable());
-        user.setFirstName("   ");
-        assertFalse(user.isBillable());
-    }
-
-    @Test
-    void testIsBillableFalseWhenFamilyNameInvalid() {
-        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", null, "12345678Z", "Calle 1", "Madrid", "Madrid", "28001");
-        assertFalse(user.isBillable());
-        user.setFamilyName("");
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"   ", "\t", "\n"})
+    void testIsBillableFalseWhenFirstNameInvalid(String invalidValue) {
+        User user = new User(1L, "Antonio", "antonio@example.com", invalidValue, "Herrero", "12345678Z", "Calle 1", "Madrid", "Madrid", "28001");
         assertFalse(user.isBillable());
     }
 
-    @Test
-    void testIsBillableFalseWhenEmailInvalid() {
-        User user = new User(1L, "Antonio", null, "Antonio", "Herrero", "12345678Z", "Calle 1", "Madrid", "Madrid", "28001");
-        assertFalse(user.isBillable());
-        user.setEmail("  ");
-        assertFalse(user.isBillable());
-    }
-
-    @Test
-    void testIsBillableFalseWhenIdentityInvalid() {
-        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", "Herrero", null, "Calle 1", "Madrid", "Madrid", "28001");
-        assertFalse(user.isBillable());
-        user.setIdentity("");
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"   "})
+    void testIsBillableFalseWhenFamilyNameInvalid(String invalidValue) {
+        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", invalidValue, "12345678Z", "Calle 1", "Madrid", "Madrid", "28001");
         assertFalse(user.isBillable());
     }
 
-    @Test
-    void testIsBillableFalseWhenAddressInvalid() {
-        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", "Herrero", "12345678Z", null, "Madrid", "Madrid", "28001");
-        assertFalse(user.isBillable());
-        user.setAddress("  ");
-        assertFalse(user.isBillable());
-    }
-
-    @Test
-    void testIsBillableFalseWhenCityInvalid() {
-        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", "Herrero", "12345678Z", "Calle 1", null, "Madrid", "28001");
-        assertFalse(user.isBillable());
-        user.setCity("");
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"   "})
+    void testIsBillableFalseWhenEmailInvalid(String invalidValue) {
+        User user = new User(1L, "Antonio", invalidValue, "Antonio", "Herrero", "12345678Z", "Calle 1", "Madrid", "Madrid", "28001");
         assertFalse(user.isBillable());
     }
 
-    @Test
-    void testIsBillableFalseWhenProvinceInvalid() {
-        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", "Herrero", "12345678Z", "Calle 1", "Madrid", null, "28001");
-        assertFalse(user.isBillable());
-        user.setProvince("   ");
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"   "})
+    void testIsBillableFalseWhenIdentityInvalid(String invalidValue) {
+        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", "Herrero", invalidValue, "Calle 1", "Madrid", "Madrid", "28001");
         assertFalse(user.isBillable());
     }
 
-    @Test
-    void testIsBillableFalseWhenPostalCodeInvalid() {
-        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", "Herrero", "12345678Z", "Calle 1", "Madrid", "Madrid", null);
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"   "})
+    void testIsBillableFalseWhenAddressInvalid(String invalidValue) {
+        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", "Herrero", "12345678Z", invalidValue, "Madrid", "Madrid", "28001");
         assertFalse(user.isBillable());
-        user.setPostalCode("");
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"   "})
+    void testIsBillableFalseWhenCityInvalid(String invalidValue) {
+        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", "Herrero", "12345678Z", "Calle 1", invalidValue, "Madrid", "28001");
+        assertFalse(user.isBillable());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"   "})
+    void testIsBillableFalseWhenProvinceInvalid(String invalidValue) {
+        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", "Herrero", "12345678Z", "Calle 1", "Madrid", invalidValue, "28001");
+        assertFalse(user.isBillable());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"   "})
+    void testIsBillableFalseWhenPostalCodeInvalid(String invalidValue) {
+        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", "Herrero", "12345678Z", "Calle 1", "Madrid", "Madrid", invalidValue);
         assertFalse(user.isBillable());
     }
 }
