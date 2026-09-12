@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [develop,release-*]
+    branches: [develop,v-*,feat*]
 
 jobs:
   devops:
@@ -37,12 +37,25 @@ jobs:
       - name: ✅ Run Unit & Integration Test & Functional Test
         run: mvn -B verify
 
-      - name: 🔔 Notify Slack on failure
-        if: failure()
-        uses: 8398a7/action-slack@v3
+      - name: Notify Slack on Success
+        if: success()
+        uses: slackapi/slack-github-action@v1.26.0
         with:
-          status: ${{ job.status }}
-          fields: repo,author,commit,author,workflow,
+          payload: |
+            {
+              "text": "✅ *CI Succeeded!*\n*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref_name }}\n*Author:* ${{ github.actor }}\n*Commit:* ${{ github.sha }}\n*Status:* The Spring Boot API has been successfully compiled and validated with Maven tests."
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Slack on Failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          payload: |
+            {
+              "text": "🚨 *CI Failed!*\n*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref_name }}\n*Author:* ${{ github.actor }}\n*Commit:* ${{ github.sha }}\n*Status:* The build or tests have failed. Please check the logs in GitHub Actions."
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
@@ -54,8 +67,8 @@ jobs:
       - name: 📊 Sonar Analysis
         run: >
           mvn -B sonar:sonar 
-          -Dsonar.projectKey=miw-upm-github_${{ env.ARTIFACT }}
-          -Dsonar.organization=miw-upm-github 
+          -Dsonar.projectKey=antomihe_${{ env.ARTIFACT }}
+          -Dsonar.organization=antomihe 
           -Dsonar.host.url=https://sonarcloud.io 
           -Dsonar.token=${{ secrets.SONAR_TOKEN }}
         env:

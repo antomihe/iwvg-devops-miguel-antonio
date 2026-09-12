@@ -13,11 +13,11 @@
     </parent>
 
     <groupId>es.upm.miw</groupId>
-    <artifactId>iwvg-devops-template</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <artifactId>iwvg-devops-miguel-antonio</artifactId>
+    <version>.6.0.0</version>
     <packaging>jar</packaging>
     <name>${project.groupId}.${project.artifactId}</name>
-    <url>http://github.com/miw-upm/${project.artifactId}</url>
+    <url>http://github.com/antomihe/${project.artifactId}</url>
 
     <licenses>
         <license>
@@ -28,9 +28,9 @@
 
     <developers>
         <developer>
-            <name>Jesus Bernal</name>
-            <id>J.Bernal</id>
-            <email>j.bernal@upm.es</email>
+            <name>Antonio Miguel Herrero</name>
+            <id>AMH</id>
+            <email>antonio.mherrero@alumnos.upm.es</email>
             <organization>MIW UPM</organization>
             <roles>
                 <role>Architect</role>
@@ -83,6 +83,23 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <!-- ================ API Test =========================== -->
@@ -154,12 +171,32 @@
                     </argLine>
                 </configuration>
             </plugin>
+            <!-- 1) Surefire Plugin Unificado: Unit Tests (*Test.java) y JaCoCo Agent -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <argLine>
+                        @{argLine}
+                        -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+                        -Xshare:off
+                    </argLine>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
+            <!-- 2) Failsafe Plugin: Integration Tests (*IT.java) y Functional Tests (*FT.java) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${maven-failsafe-plugin.version}</version>
+                <configuration>
+                    <argLine>@{argLine}</argLine>
+                </configuration>
                 <executions>
-                    <!-- 1) Integration Tests -->
                     <execution>
                         <id>integration-tests</id>
                         <phase>integration-test</phase>
@@ -172,7 +209,6 @@
                             </includes>
                         </configuration>
                     </execution>
-                    <!-- 2) Functional Tests -->
                     <execution>
                         <id>functional-tests</id>
                         <phase>integration-test</phase>
@@ -185,7 +221,6 @@
                             </includes>
                         </configuration>
                     </execution>
-                    <!-- 3) Verificación final (reporta fallos si algún IT o FT falla) -->
                     <execution>
                         <id>verify-all</id>
                         <phase>verify</phase>
