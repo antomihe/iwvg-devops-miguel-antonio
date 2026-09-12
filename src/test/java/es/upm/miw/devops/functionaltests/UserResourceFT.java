@@ -22,7 +22,6 @@ class UserResourceFT {
 
     @Test
     void testReadUser() {
-        // ID 1 precargado en el seeder del perfil "test"
         Long existingUserId = 1L;
 
         this.webTestClient.get()
@@ -46,5 +45,96 @@ class UserResourceFT {
                 .uri(UserResource.USERS + "/{id}", nonExistingUserId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void testSearchWithoutParamsReturnsAll() {
+        this.webTestClient.get()
+                .uri(UserResource.USERS + UserResource.SEARCH)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserDto.class)
+                .value(users -> assertThat(users).isNotEmpty());
+    }
+
+    @Test
+    void testSearchByNameSuccessAndNotFound() {
+        this.webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(UserResource.USERS + UserResource.SEARCH)
+                        .queryParam("name", "Oscar")
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserDto.class)
+                .value(users -> assertThat(users).allMatch(u -> u.getName() != null && u.getName().contains("Oscar")));
+
+        this.webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(UserResource.USERS + UserResource.SEARCH)
+                        .queryParam("name", "NonExistingNameXYZ")
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserDto.class)
+                .value(users -> assertThat(users).isEmpty());
+    }
+
+    @Test
+    void testSearchByEmailIgnoreCase() {
+        this.webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(UserResource.USERS + UserResource.SEARCH)
+                        .queryParam("email", "OSCAR@EXAMPLE.COM") // Ajusta según tu seeder
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserDto.class);
+    }
+
+    @Test
+    void testSearchByBillableTrue() {
+        this.webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(UserResource.USERS + UserResource.SEARCH)
+                        .queryParam("billable", true)
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserDto.class)
+                .value(users -> {
+                    assertThat(users).isNotNull();
+                    assertThat(users).allMatch(userDto -> Boolean.TRUE.equals(userDto.getBillable()));
+                });
+    }
+
+    @Test
+    void testSearchByBillableFalse() {
+        this.webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(UserResource.USERS + UserResource.SEARCH)
+                        .queryParam("billable", false)
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserDto.class)
+                .value(users -> {
+                    assertThat(users).isNotNull();
+                    assertThat(users).allMatch(userDto -> Boolean.FALSE.equals(userDto.getBillable()));
+                });
+    }
+
+    @Test
+    void testSearchByAllParametersCombined() {
+        this.webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(UserResource.USERS + UserResource.SEARCH)
+                        .queryParam("name", "a")
+                        .queryParam("email", "a@a.com")
+                        .queryParam("billable", true)
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserDto.class);
     }
 }

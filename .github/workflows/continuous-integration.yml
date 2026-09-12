@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [develop,v-*]
+    branches: [develop,v-*,feat*]
 
 jobs:
   devops:
