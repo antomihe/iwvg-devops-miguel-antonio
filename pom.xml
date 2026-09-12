@@ -171,12 +171,32 @@
                     </argLine>
                 </configuration>
             </plugin>
+            <!-- 1) Surefire Plugin Unificado: Unit Tests (*Test.java) y JaCoCo Agent -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <argLine>
+                        @{argLine}
+                        -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+                        -Xshare:off
+                    </argLine>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
+            <!-- 2) Failsafe Plugin: Integration Tests (*IT.java) y Functional Tests (*FT.java) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${maven-failsafe-plugin.version}</version>
+                <configuration>
+                    <argLine>@{argLine}</argLine>
+                </configuration>
                 <executions>
-                    <!-- 1) Integration Tests -->
                     <execution>
                         <id>integration-tests</id>
                         <phase>integration-test</phase>
@@ -189,7 +209,6 @@
                             </includes>
                         </configuration>
                     </execution>
-                    <!-- 2) Functional Tests -->
                     <execution>
                         <id>functional-tests</id>
                         <phase>integration-test</phase>
@@ -202,7 +221,6 @@
                             </includes>
                         </configuration>
                     </execution>
-                    <!-- 3) Verificación final (reporta fallos si algún IT o FT falla) -->
                     <execution>
                         <id>verify-all</id>
                         <phase>verify</phase>
