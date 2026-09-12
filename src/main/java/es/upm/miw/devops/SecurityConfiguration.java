@@ -15,6 +15,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@SuppressWarnings("java:S4502") // Disabling CSRF is safe here because the API is stateless
 public class SecurityConfiguration {
 
     @Bean
