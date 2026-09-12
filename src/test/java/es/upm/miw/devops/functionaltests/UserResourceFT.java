@@ -137,4 +137,31 @@ class UserResourceFT {
                 .expectStatus().isOk()
                 .expectBodyList(UserDto.class);
     }
+
+    @Test
+    void testDeleteUser() {
+        // Usamos un ID existente en el seeder para verificar su eliminación
+        Long existingUserId = 1L;
+
+        this.webTestClient.delete()
+                .uri(UserResource.USERS + "/{id}", existingUserId)
+                .exchange()
+                .expectStatus().isNoContent();
+
+        // Verificamos que tras la eliminación el endpoint GET devuelva NOT_FOUND
+        this.webTestClient.get()
+                .uri(UserResource.USERS + "/{id}", existingUserId)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    void testDeleteUserNotFound() {
+        Long nonExistingUserId = 999999L;
+
+        this.webTestClient.delete()
+                .uri(UserResource.USERS + "/{id}", nonExistingUserId)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
 }
