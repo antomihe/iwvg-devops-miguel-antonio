@@ -8,15 +8,17 @@ public class UserDto {
     private String name;
     private String email;
     private Boolean billable;
+    private Boolean active;
 
     public UserDto() {
     }
 
-    public UserDto(Long id, String name, String email, Boolean billable) {
+    public UserDto(Long id, String name, String email, Boolean billable, Boolean active) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.billable = billable;
+        this.active = active;
     }
 
     public UserDto(User user) {
@@ -24,6 +26,7 @@ public class UserDto {
         this.name = user.getName();
         this.email = user.getEmail();
         this.billable = user.isBillable();
+        this.active = user.getActive();
     }
 
     public Long getId() {
@@ -56,5 +59,13 @@ public class UserDto {
 
     public void setBillable(Boolean billable) {
         this.billable = billable;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

@@ -19,6 +19,7 @@ public class User {
     private String city;
     private String province;
     private String postalCode;
+    private Boolean active = true;
 
     public User() {
     }
@@ -117,6 +118,14 @@ public class User {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public boolean isBillable() {

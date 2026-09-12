@@ -1,6 +1,8 @@
 package es.upm.miw.devops.rest;
 
 import es.upm.miw.devops.data.daos.UserRepository;
+import es.upm.miw.devops.data.model.User;
+import es.upm.miw.devops.rest.dto.ActiveDto;
 import es.upm.miw.devops.rest.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,5 +56,15 @@ public class UserResource {
             );
         }
         this.userRepository.deleteById(id);
+    }
+
+    @PutMapping("/{id}/active")
+    public UserDto updateActive(@PathVariable Long id, @RequestBody ActiveDto activeDto) {
+        User user = this.userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "User id not found: " + id
+                ));
+        user.setActive(activeDto.getActive());
+        return new UserDto(this.userRepository.save(user));
     }
 }
