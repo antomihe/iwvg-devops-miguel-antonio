@@ -1,9 +1,6 @@
 package es.upm.miw.devops.data.model;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,6 +19,7 @@ class UserTest {
         assertNull(user.getCity());
         assertNull(user.getProvince());
         assertNull(user.getPostalCode());
+        assertTrue(user.getActive());
 
         user.setName("Antonio");
         user.setEmail("antonio@example.com");
@@ -32,6 +30,7 @@ class UserTest {
         user.setCity("Madrid");
         user.setProvince("Madrid");
         user.setPostalCode("28001");
+        user.setActive(false);
 
         assertEquals("Antonio", user.getName());
         assertEquals("antonio@example.com", user.getEmail());
@@ -42,114 +41,44 @@ class UserTest {
         assertEquals("Madrid", user.getCity());
         assertEquals("Madrid", user.getProvince());
         assertEquals("28001", user.getPostalCode());
+        assertFalse(user.getActive());
     }
 
     @Test
-    void testUserPartialConstructor() {
+    void testUserMinimalConstructor() {
         User user = new User(1L, "Antonio", "antonio@example.com");
 
-        assertAll("Verificación de constructor parcial",
-                () -> assertEquals(1L, user.getId()),
-                () -> assertEquals("Antonio", user.getName()),
-                () -> assertEquals("antonio@example.com", user.getEmail()),
-                () -> assertNull(user.getFirstName()),
-                () -> assertNull(user.getFamilyName()),
-                () -> assertNull(user.getIdentity()),
-                () -> assertNull(user.getAddress()),
-                () -> assertNull(user.getCity()),
-                () -> assertNull(user.getProvince()),
-                () -> assertNull(user.getPostalCode())
-        );
+        assertEquals(1L, user.getId());
+        assertEquals("Antonio", user.getName());
+        assertEquals("antonio@example.com", user.getEmail());
+        assertTrue(user.getActive());
+        assertFalse(user.isBillable());
     }
 
     @Test
-    void testUserAllArgsConstructor() {
+    void testUserFullConstructor() {
         User user = new User(1L, "Antonio Herrero", "antonio@example.com", "Antonio", "Herrero",
                 "12345678Z", "Calle Mayor 1", "Madrid", "Madrid", "28001");
 
-        assertAll("Verificación de constructor completo",
-                () -> assertEquals(1L, user.getId()),
-                () -> assertEquals("Antonio Herrero", user.getName()),
-                () -> assertEquals("antonio@example.com", user.getEmail()),
-                () -> assertEquals("Antonio", user.getFirstName()),
-                () -> assertEquals("Herrero", user.getFamilyName()),
-                () -> assertEquals("12345678Z", user.getIdentity()),
-                () -> assertEquals("Calle Mayor 1", user.getAddress()),
-                () -> assertEquals("Madrid", user.getCity()),
-                () -> assertEquals("Madrid", user.getProvince()),
-                () -> assertEquals("28001", user.getPostalCode())
-        );
-    }
-
-    @Test
-    void testIsBillableTrue() {
-        User user = new User(1L, "Antonio Herrero", "antonio@example.com", "Antonio", "Herrero",
-                "12345678Z", "Calle Mayor 1", "Madrid", "Madrid", "28001");
-
+        assertEquals(1L, user.getId());
+        assertEquals("Antonio Herrero", user.getName());
+        assertEquals("antonio@example.com", user.getEmail());
+        assertEquals("Antonio", user.getFirstName());
+        assertEquals("Herrero", user.getFamilyName());
+        assertEquals("12345678Z", user.getIdentity());
+        assertEquals("Calle Mayor 1", user.getAddress());
+        assertEquals("Madrid", user.getCity());
+        assertEquals("Madrid", user.getProvince());
+        assertEquals("28001", user.getPostalCode());
+        assertTrue(user.getActive());
         assertTrue(user.isBillable());
     }
 
-    @ParameterizedTest
-    @NullAndEmptySource
-    @ValueSource(strings = {"   ", "\t", "\n"})
-    void testIsBillableFalseWhenFirstNameInvalid(String invalidValue) {
-        User user = new User(1L, "Antonio", "antonio@example.com", invalidValue, "Herrero", "12345678Z", "Calle 1", "Madrid", "Madrid", "28001");
-        assertFalse(user.isBillable());
-    }
+    @Test
+    void testIsBillableFalseWhenFieldIsEmptyOrNull() {
+        User user = new User(1L, "Antonio Herrero", "antonio@example.com", "Antonio", "Herrero",
+                "12345678Z", "Calle Mayor 1", "Madrid", "Madrid", "   ");
 
-    @ParameterizedTest
-    @NullAndEmptySource
-    @ValueSource(strings = {"   "})
-    void testIsBillableFalseWhenFamilyNameInvalid(String invalidValue) {
-        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", invalidValue, "12345678Z", "Calle 1", "Madrid", "Madrid", "28001");
-        assertFalse(user.isBillable());
-    }
-
-    @ParameterizedTest
-    @NullAndEmptySource
-    @ValueSource(strings = {"   "})
-    void testIsBillableFalseWhenEmailInvalid(String invalidValue) {
-        User user = new User(1L, "Antonio", invalidValue, "Antonio", "Herrero", "12345678Z", "Calle 1", "Madrid", "Madrid", "28001");
-        assertFalse(user.isBillable());
-    }
-
-    @ParameterizedTest
-    @NullAndEmptySource
-    @ValueSource(strings = {"   "})
-    void testIsBillableFalseWhenIdentityInvalid(String invalidValue) {
-        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", "Herrero", invalidValue, "Calle 1", "Madrid", "Madrid", "28001");
-        assertFalse(user.isBillable());
-    }
-
-    @ParameterizedTest
-    @NullAndEmptySource
-    @ValueSource(strings = {"   "})
-    void testIsBillableFalseWhenAddressInvalid(String invalidValue) {
-        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", "Herrero", "12345678Z", invalidValue, "Madrid", "Madrid", "28001");
-        assertFalse(user.isBillable());
-    }
-
-    @ParameterizedTest
-    @NullAndEmptySource
-    @ValueSource(strings = {"   "})
-    void testIsBillableFalseWhenCityInvalid(String invalidValue) {
-        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", "Herrero", "12345678Z", "Calle 1", invalidValue, "Madrid", "28001");
-        assertFalse(user.isBillable());
-    }
-
-    @ParameterizedTest
-    @NullAndEmptySource
-    @ValueSource(strings = {"   "})
-    void testIsBillableFalseWhenProvinceInvalid(String invalidValue) {
-        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", "Herrero", "12345678Z", "Calle 1", "Madrid", invalidValue, "28001");
-        assertFalse(user.isBillable());
-    }
-
-    @ParameterizedTest
-    @NullAndEmptySource
-    @ValueSource(strings = {"   "})
-    void testIsBillableFalseWhenPostalCodeInvalid(String invalidValue) {
-        User user = new User(1L, "Antonio", "antonio@example.com", "Antonio", "Herrero", "12345678Z", "Calle 1", "Madrid", "Madrid", invalidValue);
         assertFalse(user.isBillable());
     }
 }

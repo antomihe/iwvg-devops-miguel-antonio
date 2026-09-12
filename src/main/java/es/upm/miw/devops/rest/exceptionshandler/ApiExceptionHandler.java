@@ -2,6 +2,7 @@ package es.upm.miw.devops.rest.exceptionshandler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,6 +28,13 @@ public class ApiExceptionHandler {
                 new RuntimeException("Route not found. Try: /actuator/info or /swagger-ui.html"),
                 HttpStatus.NOT_FOUND.value()
         );
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseBody
+    public ErrorMessage handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
+        return new ErrorMessage(exception, HttpStatus.BAD_REQUEST.value());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
