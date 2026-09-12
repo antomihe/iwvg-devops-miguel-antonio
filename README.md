@@ -39,6 +39,12 @@ docker network create devopsNet
 ```sh
 docker network ls
 ```
+
+* Levantar las bases de datos (PostgreSQL, MySQL, MongoDB)::
+```sh
+docker compose -f docker-compose-db.yml -p databases up -d
+````
+
 * Comando Docker para crear imagen y arrancar contenedor con la imagen ( :warning: **incluir el punto final** ):
 ```sh
 docker build -t devops:latest .
