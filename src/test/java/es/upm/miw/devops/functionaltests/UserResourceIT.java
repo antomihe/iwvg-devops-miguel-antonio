@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
@@ -15,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @ActiveProfiles("test")
-class UserResourceFT {
+class UserResourceIT {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -85,7 +86,7 @@ class UserResourceFT {
         this.webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(UserResource.USERS + UserResource.SEARCH)
-                        .queryParam("email", "OSCAR@EXAMPLE.COM") // Ajusta según tu seeder
+                        .queryParam("email", "OSCAR@EXAMPLE.COM")
                         .build())
                 .exchange()
                 .expectStatus().isOk()
@@ -139,8 +140,8 @@ class UserResourceFT {
     }
 
     @Test
+    @DirtiesContext
     void testDeleteUser() {
-        // Usamos un ID existente en el seeder para verificar su eliminación
         Long existingUserId = 1L;
 
         this.webTestClient.delete()
@@ -148,7 +149,6 @@ class UserResourceFT {
                 .exchange()
                 .expectStatus().isNoContent();
 
-        // Verificamos que tras la eliminación el endpoint GET devuelva NOT_FOUND
         this.webTestClient.get()
                 .uri(UserResource.USERS + "/{id}", existingUserId)
                 .exchange()

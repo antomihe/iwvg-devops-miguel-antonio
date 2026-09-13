@@ -14,15 +14,15 @@
 
     <groupId>es.upm.miw</groupId>
     <artifactId>iwvg-devops-miguel-antonio</artifactId>
-    <version>.6.0.0</version>
+    <version>6.0.0</version>
     <packaging>jar</packaging>
     <name>${project.groupId}.${project.artifactId}</name>
-    <url>http://github.com/antomihe/${project.artifactId}</url>
+    <url>https://github.com/antomihe/${project.artifactId}</url>
 
     <licenses>
         <license>
             <name>MIT License</name>
-            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <url>https://www.opensource.org/licenses/mit-license.php</url>
         </license>
     </licenses>
 
@@ -70,15 +70,11 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <!-- Actuator -->
-        <!-- http://localhost:8080/actuator/info   -->
-        <!-- http://localhost:8080/actuator/health -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        <!-- OpenAPI http://localhost:8080/swagger-ui.html -->
-        <!-- OpenAPI http://localhost:8080/v3/api-docs -->
-        <!-- OpenAPI http://localhost:8081/v3/api-docs.yaml (yaml)  -->
+        <!-- OpenAPI -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
@@ -120,6 +116,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -160,71 +157,36 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- 1) Surefire Plugin: Unit Tests (*Test.java) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <argLine>
-                        -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
-                        -Xshare:off
-                    </argLine>
-                </configuration>
-            </plugin>
-            <!-- 1) Surefire Plugin Unificado: Unit Tests (*Test.java) y JaCoCo Agent -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <argLine>
-                        @{argLine}
-                        -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
-                        -Xshare:off
-                    </argLine>
+                    <argLine>@{argLine} -XX:+EnableDynamicAgentLoading -Xshare:off</argLine>
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
                 </configuration>
             </plugin>
 
-            <!-- 2) Failsafe Plugin: Integration Tests (*IT.java) y Functional Tests (*FT.java) -->
+            <!-- 2) Failsafe Plugin: Integration Tests (*IT.java) & Functional Tests (*FT.java) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${maven-failsafe-plugin.version}</version>
                 <configuration>
-                    <argLine>@{argLine}</argLine>
+                    <argLine>@{argLine} -XX:+EnableDynamicAgentLoading</argLine>
+                    <includes>
+                        <include>**/*IT.java</include>
+                        <include>**/*FT.java</include>
+                    </includes>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>integration-tests</id>
-                        <phase>integration-test</phase>
                         <goals>
                             <goal>integration-test</goal>
-                        </goals>
-                        <configuration>
-                            <includes>
-                                <include>**/*IT.java</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>functional-tests</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>integration-test</goal>
-                        </goals>
-                        <configuration>
-                            <includes>
-                                <include>**/*FT.java</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>verify-all</id>
-                        <phase>verify</phase>
-                        <goals>
                             <goal>verify</goal>
                         </goals>
                     </execution>

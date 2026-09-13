@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.charset.StandardCharsets;
+
 @RestController
 @RequestMapping("/")
 public class SystemResource {
@@ -30,11 +32,14 @@ public class SystemResource {
             """;
     private static final int TEXT_MARGIN = 12;
     private static final int CHARACTER_WIDTH = 6;
-    @Value("${info.app.artifact}")
+
+    @Value("${info.app.artifact:unknown}")
     private String artifact;
-    @Value("${info.app.version}")
+
+    @Value("${info.app.version:unknown}")
     private String version;
-    @Value("${info.app.build}")
+
+    @Value("${info.app.build:unknown}")
     private String build;
 
     public String generateBadge(String label, String value) {
@@ -43,22 +48,22 @@ public class SystemResource {
         int textWidth = widthLabel + widthValue;
         int middleLabel = widthLabel / 2;
         int middleValue = widthLabel + widthValue / 2;
-        return String.format(BADGE_IMAGE_TEMPLATE, textWidth, textWidth, widthLabel, widthValue, widthLabel, textWidth,
+
+        return String.format(BADGE_IMAGE_TEMPLATE,
+                textWidth, textWidth, widthLabel, widthValue, widthLabel, textWidth,
                 middleLabel, label, middleLabel, label, middleValue, value, middleValue, value);
     }
 
     @GetMapping
     public String applicationInfo() {
-        String appInfo = "{\"version\":\"" + this.artifact + "::" + this.version + "::" + this.build + "\"} <br> <br>";
-        appInfo += "/version-badge <br><br>";
-        appInfo += "/actuator/info <br> /actuator/health <br><br>";
-        appInfo += "/swagger-ui.html  <br> /v3/api-docs <br>";
-        return appInfo;
+        return "{\"version\":\"" + this.artifact + "::" + this.version + "::" + this.build + "\"} <br> <br>"
+                + "/version-badge <br><br>"
+                + "/actuator/info <br> /actuator/health <br><br>"
+                + "/swagger-ui.html  <br> /v3/api-docs <br>";
     }
 
     @GetMapping(value = VERSION_BADGE, produces = {"image/svg+xml"})
     public byte[] generateBadge() {
-        return this.generateBadge("Render", "v" + version).getBytes();
+        return this.generateBadge("Render", "v" + this.version).getBytes(StandardCharsets.UTF_8);
     }
-
 }
