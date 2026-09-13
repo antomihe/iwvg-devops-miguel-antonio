@@ -1,7 +1,5 @@
 package es.upm.miw.devops.rest.dto;
 
-import es.upm.miw.devops.data.model.User;
-
 public class UserDto {
 
     private Long id;
@@ -19,14 +17,6 @@ public class UserDto {
         this.email = email;
         this.billable = billable;
         this.active = active;
-    }
-
-    public UserDto(User user) {
-        this.id = user.getId();
-        this.name = user.getName();
-        this.email = user.getEmail();
-        this.billable = user.isBillable();
-        this.active = user.getActive();
     }
 
     public Long getId() {

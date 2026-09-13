@@ -4,9 +4,6 @@ spring:
       on-profile: test
   main:
     allow-bean-definition-overriding: true
-  output:
-    ansi:
-      enabled: ALWAYS
   cache:
     type: none
   jackson:
@@ -21,29 +18,21 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: create-drop
-    show-sql: true
+    show-sql: false
+    properties:
+      hibernate.format_sql: false
+      hibernate.highlight_sql: false
     defer-datasource-initialization: true
   sql:
     init:
       mode: always
       data-locations: classpath:data.sql
 
-info:
-  app:
-    artifact: "@project.artifactId@"
-    version: "@project.version@"
-    build: "@maven.build.timestamp@"
-
 logging:
   level:
-    root: WARN
-    es.upm.miw: DEBUG
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info
-  info:
-    env:
-      enabled: true
+    root: ERROR
+    es.upm.miw: INFO
+    org.springframework: ERROR
+    org.hibernate: ERROR
+    org.hibernate.SQL: OFF
+    org.hibernate.type.descriptor.sql: OFF

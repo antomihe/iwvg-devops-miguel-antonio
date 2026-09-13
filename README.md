@@ -35,7 +35,7 @@ git clone https://github.com/miw-upm/iwvg-devops
 ```sh
 docker network create devopsNet
 ```
-* Ver redes:
+* Ver redes (opcional):
 ```sh
 docker network ls
 ```
@@ -44,12 +44,6 @@ docker network ls
 ```sh
 docker compose -f docker-compose-db.yml -p databases up -d
 ````
-
-* Comando Docker para crear imagen y arrancar contenedor con la imagen ( :warning: **incluir el punto final** ):
-```sh
-docker build -t devops:latest .
-docker run -d --name devops1  -p 8080:8080 devops
-```
 
 * Comando para crear imagen y arrancarla en contenedor mediante docker compose (Se utiliza el fichero **docker-compose.yml**)
 ```sh

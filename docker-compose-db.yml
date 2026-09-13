@@ -1,5 +1,4 @@
 services:
-
   mysql:
     image: mysql:8.4
     container_name: mysql-server
@@ -58,45 +57,3 @@ volumes:
 networks:
   devopsNet:
     external: true
-
-# Construir todas las BD
-#> docker compose -f docker-compose-db.yml -p databases up -d
-
-# CONSOLA & COMANDOS MySQL
-#> docker exec -it mysql-server mysql -u root -p
-#  show databases;
-#  create database poo;
-#  drop database poo;
-#  use poo;
-#  show tables;
-#  describe mytable;
-#  select * from mytable;
-#  drop table mytable;
-#  exit
-
-# CONSOLA & COMANDOS Postgres
-#> docker exec -it postgres-server  psql -U postgres
-#  \?   Help
-#  \l   Database list
-#  \connect <db> <usr>
-#  \dt   Table list
-#  \d <table> ;  describe
-#  \q   exit
-#  create database <db>;
-#  drop database <db>;
-#  select * from <table>;
-#  delete from <table>;
-
-# CONSOLA & COMANDOS mongo
-#> docker exec -it mongo-server mongosh "mongodb://mongo:mongo@localhost:27017/devops?authSource=admin"
-#  help
-#  db.version()
-#  db.stats()
-#  show databases
-#  use <myBD>
-#  show collections
-#  db.dropDatabase()
-#  db.coll1.drop()
-#  db.coll1.find()
-#  db.coll1.find().pretty()
-#  db.coll1.count()
