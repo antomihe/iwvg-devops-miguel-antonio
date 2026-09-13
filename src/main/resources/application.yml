@@ -10,29 +10,12 @@ spring:
     type: none
   jackson:
     default-property-inclusion: NON_NULL
-  datasource:
-    url: jdbc:postgresql://postgres-server:5432/devopsDb
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 info:
   app:
     artifact: "@project.artifactId@"
     version: "@project.version@"
     build: "@maven.build.timestamp@"
-
-logging:
-  level:
-    root: WARN
-    es.upm.miw: DEBUG
 
 management:
   endpoints:

@@ -1,4 +1,4 @@
-package es.upm.miw.devops.data.daos;
+package es.upm.miw.devops.data.repositories;
 
 import es.upm.miw.devops.data.model.User;
 import org.junit.jupiter.api.Test;
