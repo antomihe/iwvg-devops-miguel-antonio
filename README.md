@@ -12,11 +12,14 @@
 ### Estado del código
 [![DevOps](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-integration.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=antomihe_iwvg-devops-miguel-antonio&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=antomihe_iwvg-devops-miguel-antonio)
-[![Render broken](https://iwvg-devops-latest.onrender.com/version-badge)](https://iwvg-devops-latest.onrender.com/swagger-ui.html)
+[![Render broken](https://iwvg-devops-miguel-antonio.onrender.com/version-badge)](https://iwvg-devops-miguel-antonio.onrender.com/swagger-ui/index.html#/)
 
 
 ### Tecnologías necesarias
 `Java` `Maven` `GitHub` `GitHub Actions` `Sonarcloud` `Slack` `Spring-Boot` `GitHub Packages` `Docker` `OpenAPI`
+### :gear: Configuración de Variables de Entorno (`.env`)
+
+El proyecto utiliza variables de entorno para evitar registrar credenciales o secretos en el código fuente.
 
 ### :gear: Instalación del proyecto
 1. Clonar el repositorio en tu equipo, **mediante consola**:
@@ -26,6 +29,18 @@ git clone https://github.com/miw-upm/iwvg-devops
 ```
 2. Importar el proyecto mediante **IntelliJ IDEA**
    * **Open**, y seleccionar la carpeta del proyecto.
+
+1. Crea un archivo `.env` en la raíz del proyecto junto a los ficheros `docker-compose.yml` y `docker-compose-db.yml`:
+
+```env
+# Configuración de PostgreSQL
+POSTGRES_DB=iwvg_db
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+
+# Perfil activo de Spring Boot (dev / prod / test)
+SPRING_PROFILES_ACTIVE=dev
+```
 
 ### :gear: Ejecución en local con IntelliJ
 * Ejecutar la clase **Application** con IntelliJ
@@ -42,7 +57,7 @@ docker network ls
 
 * Levantar las bases de datos (PostgreSQL, MySQL, MongoDB)::
 ```sh
-docker compose -f docker-compose-db.yml -p databases up -d
+docker compose -f docker-compose-db.yml up -d
 ````
 
 * Comando para crear imagen y arrancarla en contenedor mediante docker compose (Se utiliza el fichero **docker-compose.yml**)
