@@ -1,67 +1,59 @@
 package es.upm.miw.devops.services;
 
-import es.upm.miw.devops.data.repositories.UserRepository;
-import es.upm.miw.devops.data.model.User;
-import es.upm.miw.devops.rest.dto.ActiveDto;
-import es.upm.miw.devops.rest.dto.UserDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import es.upm.miw.devops.infrastructure.data.daos.UserRepository;
+import es.upm.miw.devops.infrastructure.data.models.User;
+import es.upm.miw.devops.services.exceptions.ConflictException;
+import es.upm.miw.devops.services.exceptions.NotFoundException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.UUID;
 
+@Log4j2
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public User create(User user) {
+        this.assertMobileNotExist(user.getMobile());
+        log.info("Creating user with mobile: {}", user.getMobile());
+        return this.userRepository.save(user);
     }
 
-    public UserDto read(Long id) {
+    public User read(UUID id) {
         return this.userRepository.findById(id)
-                .map(this::toDto)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "User id not found: " + id
-                ));
+                .orElseThrow(() -> new NotFoundException("User id not found: " + id));
     }
 
-    public Stream<UserDto> search(String name, String email, Boolean billable) {
-        return this.userRepository.findAll().stream()
-                .filter(user -> name == null || (user.getName() != null && user.getName().contains(name)))
-                .filter(user -> email == null || (user.getEmail() != null && user.getEmail().equalsIgnoreCase(email)))
-                .filter(user -> billable == null || user.isBillable() == billable)
-                .map(this::toDto);
+    public List<User> readAll() {
+        return this.userRepository.findAll();
     }
 
-    public void delete(Long id) {
-        if (!this.userRepository.existsById(id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "User id not found: " + id
-            );
+    public User update(UUID id, User user) {
+        User existingUser = this.read(id);
+        if (!existingUser.getMobile().equals(user.getMobile())) {
+            this.assertMobileNotExist(user.getMobile());
         }
+        existingUser.setMobile(user.getMobile());
+        existingUser.setName(user.getName());
+        existingUser.setFamilyName(user.getFamilyName());
+        existingUser.setActive(user.getActive());
+        log.info("Updating user with id: {}", id);
+        return this.userRepository.save(existingUser);
+    }
+
+    public void delete(UUID id) {
+        log.info("Deleting user with id: {}", id);
         this.userRepository.deleteById(id);
     }
 
-    public UserDto updateActive(Long id, ActiveDto activeDto) {
-        User user = this.userRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "User id not found: " + id
-                ));
-        user.setActive(activeDto.getActive());
-        return this.toDto(this.userRepository.save(user));
-    }
-
-    private UserDto toDto(User user) {
-        return new UserDto(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                user.isBillable(),
-                user.getActive()
-        );
+    private void assertMobileNotExist(String mobile) {
+        if (this.userRepository.existsByMobile(mobile)) {
+            throw new ConflictException("Mobile already exists: " + mobile);
+        }
     }
 }
