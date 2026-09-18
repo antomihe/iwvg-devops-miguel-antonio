@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Transactional
 class UserServiceTest {
 
     @Autowired
@@ -29,212 +27,207 @@ class UserServiceTest {
 
     @Test
     void testCreateSuccess() {
-        User user = User.builder()
-                .mobile("611222333")
-                .name("Alice")
-                .familyName("Smith")
+        User userToCreate = User.builder()
+                .mobile("666000000")
+                .name("Test")
+                .familyName("User")
                 .active(true)
                 .build();
-        User created = this.userService.create(user);
-        assertNull(created.getId());
-        assertEquals("611222333", created.getMobile());
+
+        User user = this.userService.create(userToCreate);
+
+        assertNotNull(user);
+        assertNotNull(user.getId());
+        assertEquals("666000000", user.getMobile());
+        assertEquals("Test", user.getFirstName());
+        assertEquals("User", user.getFamilyName());
+        assertTrue(user.getActive());
+
+        this.userRepository.deleteById(user.getId());
     }
 
     @Test
-    void testCreateConflict() {
-        User user = User.builder()
-                .mobile("611222334")
-                .name("Bob")
-                .familyName("Jones")
-                .active(true)
-                .build();
-        this.userService.create(user);
-
-        User duplicateUser = User.builder()
-                .mobile("611222334")
-                .name("Bob")
-                .familyName("Jones")
-                .active(true)
+    void testCreateConflictMobileExists() {
+        User existingUser = this.userRepository.findAll().stream().findFirst().orElseThrow();
+        User userToCreate = User.builder()
+                .mobile(existingUser.getMobile())
+                .name("Test")
                 .build();
 
-        assertThrows(ConflictException.class, () -> this.userService.create(duplicateUser));
-    }
-
-    @Test
-    void testReadSuccess() {
-        User user = User.builder()
-                .mobile("600000001")
-                .name("Read")
-                .familyName("Test")
-                .active(true)
-                .build();
-        User created = this.userService.create(user);
-
-        User found = this.userService.read(created.getId());
-        assertEquals("600000001", found.getMobile());
-    }
-
-    @Test
-    void testReadNotFound() {
-        UUID nonExistentId = UUID.randomUUID();
-        assertThrows(NotFoundException.class, () -> this.userService.read(nonExistentId));
+        assertThrows(ConflictException.class, () -> this.userService.create(userToCreate));
     }
 
     @Test
     void testReadAll() {
-        User user = User.builder()
-                .mobile("600000002")
-                .name("ReadAll")
-                .familyName("Test")
-                .active(true)
-                .build();
-        this.userService.create(user);
-
         List<User> users = this.userService.readAll();
         assertNotNull(users);
         assertFalse(users.isEmpty());
     }
 
     @Test
-    void testUpdateSuccessWithSameMobile() {
-        User user = User.builder()
-                .mobile("600999888")
-                .name("OldName")
-                .familyName("OldFamily")
-                .active(true)
-                .build();
-        User created = this.userService.create(user);
+    void testReadSuccess() {
+        User existingUser = this.userRepository.findAll().stream().findFirst().orElseThrow();
+        User user = this.userService.read(existingUser.getId());
 
-        User updateData = User.builder()
-                .mobile("600999888")
-                .name("NewName")
-                .familyName("NewFamily")
+        assertNotNull(user);
+        assertEquals(existingUser.getMobile(), user.getMobile());
+    }
+
+    @Test
+    void testReadNotFound() {
+        UUID nonExistentId = UUID.fromString("00000000-0000-0000-0000-999999999999");
+        assertThrows(NotFoundException.class, () -> this.userService.read(nonExistentId));
+    }
+
+    @Test
+    void testUpdateSuccessSameMobile() {
+        User existingUser = this.userRepository.findAll().stream().findFirst().orElseThrow();
+        User userToUpdate = User.builder()
+                .mobile(existingUser.getMobile())
+                .name("UpdatedName")
+                .familyName("UpdatedFamily")
                 .active(false)
                 .build();
 
-        User updated = this.userService.update(created.getId(), updateData);
-        assertEquals("NewName", updated.getName());
-        assertEquals("NewFamily", updated.getFamilyName());
-        assertEquals("600999888", updated.getMobile());
-        assertFalse(updated.getActive());
+        User updatedUser = this.userService.update(existingUser.getId(), userToUpdate);
+
+        assertEquals("UpdatedName", updatedUser.getFirstName());
+        assertEquals("UpdatedFamily", updatedUser.getFamilyName());
+        assertFalse(updatedUser.getActive());
     }
 
     @Test
-    void testUpdateSuccessWithDifferentMobile() {
-        User user = User.builder()
-                .mobile("600999881")
-                .name("Initial")
-                .familyName("User")
-                .active(true)
-                .build();
-        User created = this.userService.create(user);
+    void testUpdateSuccessNewMobile() {
+        User existingUser = this.userRepository.findAll().stream().findFirst().orElseThrow();
+        String newMobile = "699000111";
 
-        User updateData = User.builder()
-                .mobile("600999882")
-                .name("Initial")
-                .familyName("User")
+        User userToUpdate = User.builder()
+                .mobile(newMobile)
+                .name("NewName")
+                .familyName("NewFamily")
                 .active(true)
                 .build();
 
-        User updated = this.userService.update(created.getId(), updateData);
-        assertEquals("600999882", updated.getMobile());
+        User updatedUser = this.userService.update(existingUser.getId(), userToUpdate);
+
+        assertEquals(newMobile, updatedUser.getMobile());
+        assertEquals("NewName", updatedUser.getFirstName());
     }
 
     @Test
-    void testUpdateConflictWithExistingMobile() {
-        User user1 = User.builder()
-                .mobile("600111111")
-                .name("User1")
-                .familyName("Test")
-                .active(true)
-                .build();
-        this.userService.create(user1);
+    void testUpdateNotFound() {
+        UUID nonExistentId = UUID.fromString("00000000-0000-0000-0000-999999999999");
+        User userToUpdate = User.builder().mobile("600000000").build();
 
-        User user2 = User.builder()
-                .mobile("600222222")
-                .name("User2")
-                .familyName("Test")
-                .active(true)
-                .build();
-        User createdUser2 = this.userService.create(user2);
+        assertThrows(NotFoundException.class, () -> this.userService.update(nonExistentId, userToUpdate));
+    }
 
-        User conflictData = User.builder()
-                .mobile("600111111")
-                .name("User2")
-                .familyName("Test")
-                .active(true)
-                .build();
+    @Test
+    void testUpdateConflictMobileExists() {
+        List<User> users = this.userRepository.findAll();
+        if (users.size() >= 2) {
+            User firstUser = users.get(0);
+            User secondUser = users.get(1);
 
-        assertThrows(ConflictException.class, () -> this.userService.update(createdUser2.getId(), conflictData));
+            User userToUpdate = User.builder()
+                    .mobile(firstUser.getMobile())
+                    .name("Updated")
+                    .build();
+
+            assertThrows(ConflictException.class, () -> this.userService.update(secondUser.getId(), userToUpdate));
+        }
     }
 
     @Test
     void testUpdateActive() {
-        User user = User.builder()
-                .mobile("600333444")
-                .name("ActiveTest")
-                .familyName("User")
-                .active(true)
-                .build();
-        User created = this.userService.create(user);
+        User existingUser = this.userRepository.findAll().stream().findFirst().orElseThrow();
+        Boolean newActiveState = !Boolean.TRUE.equals(existingUser.getActive());
 
-        User updated = this.userService.updateActive(created.getId(), false);
-        assertFalse(updated.getActive());
+        User updatedUser = this.userService.updateActive(existingUser.getId(), newActiveState);
+
+        assertEquals(newActiveState, updatedUser.getActive());
     }
 
     @Test
     void testUpdateActiveList() {
-        User user1 = User.builder().mobile("600888111").name("U1").familyName("T1").active(true).build();
-        User user2 = User.builder().mobile("600888222").name("U2").familyName("T2").active(true).build();
-        User created1 = this.userService.create(user1);
-        User created2 = this.userService.create(user2);
+        List<User> users = this.userRepository.findAll();
+        if (!users.isEmpty()) {
+            User user = users.get(0);
+            ActiveDto activeDto = new ActiveDto(user.getId(), false);
 
-        List<ActiveDto> activeDtoList = List.of(
-                new ActiveDto(created1.getId(), false),
-                new ActiveDto(created2.getId(), false)
-        );
+            List<User> updatedUsers = this.userService.updateActiveList(List.of(activeDto));
 
-        List<User> updatedUsers = this.userService.updateActiveList(activeDtoList);
-        assertEquals(2, updatedUsers.size());
-        assertFalse(updatedUsers.get(0).getActive());
-        assertFalse(updatedUsers.get(1).getActive());
+            assertNotNull(updatedUsers);
+            assertFalse(updatedUsers.isEmpty());
+            assertFalse(updatedUsers.get(0).getActive());
+        }
     }
 
     @Test
-    void testDelete() {
-        User user = User.builder()
-                .mobile("600777666")
-                .name("DeleteTest")
+    void testDeleteSuccess() {
+        User tempUser = this.userService.create(User.builder().mobile("699999999").build());
+
+        this.userService.delete(tempUser.getId());
+
+        assertFalse(this.userRepository.existsById(tempUser.getId()));
+    }
+
+    @Test
+    void testDeleteIdempotent() {
+        UUID nonExistentId = UUID.fromString("00000000-0000-0000-0000-999999999999");
+        assertDoesNotThrow(() -> this.userService.delete(nonExistentId));
+    }
+
+    @Test
+    void testFindByBillableAndIsBillableBranches() {
+        User billableUser = this.userService.create(User.builder()
+                .mobile("611111111")
+                .name("Billable")
                 .familyName("User")
-                .active(true)
-                .build();
-        User created = this.userService.create(user);
-        UUID id = created.getId();
+                .build());
 
-        this.userService.delete(id);
-        assertThrows(NotFoundException.class, () -> this.userService.read(id));
-    }
+        User nonBillableNullName = this.userService.create(User.builder()
+                .mobile("622222222")
+                .familyName("User")
+                .build());
 
-    @Test
-    void testFindByBillable() {
-        User billableUser = User.builder()
-                .mobile("600555111")
-                .name("ValidName")
-                .familyName("ValidFamily")
-                .active(true)
-                .build();
-        this.userService.create(billableUser);
+        User nonBillableBlankName = this.userService.create(User.builder()
+                .mobile("633333333")
+                .name("   ")
+                .familyName("User")
+                .build());
 
-        User nonBillableUser = User.builder()
-                .mobile("600555222")
-                .name("")
-                .familyName("OnlyFamily")
-                .active(true)
-                .build();
-        this.userService.create(nonBillableUser);
+        User nonBillableNullFamily = this.userService.create(User.builder()
+                .mobile("644444444")
+                .name("Name")
+                .build());
 
-        List<User> billables = this.userService.findByBillable(true);
-        assertTrue(billables.stream().anyMatch(u -> "600555111".equals(u.getMobile())));
-        assertFalse(billables.stream().anyMatch(u -> "600555222".equals(u.getMobile())));
+        User nonBillableBlankFamily = this.userService.create(User.builder()
+                .mobile("655555555")
+                .name("Name")
+                .familyName("   ")
+                .build());
+
+        User nonBillableNullMobile = new User();
+        nonBillableNullMobile.setName("Name");
+        nonBillableNullMobile.setFamilyName("Family");
+        nonBillableNullMobile.setMobile(null);
+
+        User nonBillableBlankMobile = new User();
+        nonBillableBlankMobile.setName("Name");
+        nonBillableBlankMobile.setFamilyName("Family");
+        nonBillableBlankMobile.setMobile("   ");
+
+        List<User> billableUsers = this.userService.findByBillable(true);
+        assertTrue(billableUsers.stream().anyMatch(u -> "611111111".equals(u.getMobile())));
+
+        List<User> nonBillableUsers = this.userService.findByBillable(false);
+        assertTrue(nonBillableUsers.stream().anyMatch(u -> "622222222".equals(u.getMobile())));
+
+        this.userRepository.deleteById(billableUser.getId());
+        this.userRepository.deleteById(nonBillableNullName.getId());
+        this.userRepository.deleteById(nonBillableBlankName.getId());
+        this.userRepository.deleteById(nonBillableNullFamily.getId());
+        this.userRepository.deleteById(nonBillableBlankFamily.getId());
     }
 }

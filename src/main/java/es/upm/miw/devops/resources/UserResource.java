@@ -1,6 +1,5 @@
 package es.upm.miw.devops.resources;
 
-import es.upm.miw.devops.infrastructure.data.models.User;
 import es.upm.miw.devops.resources.dtos.ActiveDto;
 import es.upm.miw.devops.resources.dtos.UserDto;
 import es.upm.miw.devops.services.UserService;
@@ -17,18 +16,8 @@ import java.util.UUID;
 public class UserResource {
 
     public static final String USERS = "/users";
-    public static final String ID_ID = "/{id}";
-    public static final String ACTIVE = "/active";
-    public static final String SEARCH = "/search";
 
     private final UserService userService;
-
-    @PostMapping
-    public UserDto create(@Valid @RequestBody UserDto userDto) {
-        User user = userDto.toUser();
-        User createdUser = this.userService.create(user);
-        return new UserDto(createdUser);
-    }
 
     @GetMapping
     public List<UserDto> readAll() {
@@ -37,44 +26,44 @@ public class UserResource {
                 .toList();
     }
 
-    @GetMapping(ID_ID)
+    @GetMapping("/{id}")
     public UserDto read(@PathVariable UUID id) {
-        User user = this.userService.read(id);
-        return new UserDto(user);
+        return new UserDto(this.userService.read(id));
     }
 
-    @PutMapping(ID_ID)
+    @PostMapping
+    public UserDto create(@Valid @RequestBody UserDto userDto) {
+        return new UserDto(this.userService.create(userDto.toUser()));
+    }
+
+    @PutMapping("/{id}")
     public UserDto update(@PathVariable UUID id, @Valid @RequestBody UserDto userDto) {
-        User user = userDto.toUser();
-        User updatedUser = this.userService.update(id, user);
-        return new UserDto(updatedUser);
+        return new UserDto(this.userService.update(id, userDto.toUser()));
     }
 
-    @PutMapping(ID_ID + ACTIVE)
-    public UserDto updateActivePut(@PathVariable UUID id, @Valid @RequestBody ActiveDto activeDto) {
-        User user = this.userService.updateActive(id, activeDto.getActive());
-        return new UserDto(user);
+    @PatchMapping("/{id}/active")
+    public UserDto updateActive(@PathVariable UUID id, @RequestBody ActiveDto activeDto) {
+        return new UserDto(this.userService.updateActive(id, activeDto.getActive()));
     }
 
-    @PatchMapping(ID_ID + ACTIVE)
-    public UserDto updateActive(@PathVariable UUID id, @Valid @RequestBody ActiveDto activeDto) {
-        User user = this.userService.updateActive(id, activeDto.getActive());
-        return new UserDto(user);
+    @PutMapping("/{id}/active")
+    public UserDto updateActivePut(@PathVariable UUID id, @RequestBody ActiveDto activeDto) {
+        return new UserDto(this.userService.updateActive(id, activeDto.getActive()));
     }
 
-    @PatchMapping
+    @PatchMapping("/active")
     public List<UserDto> updateActiveList(@RequestBody List<ActiveDto> activeDtoList) {
         return this.userService.updateActiveList(activeDtoList).stream()
                 .map(UserDto::new)
                 .toList();
     }
 
-    @DeleteMapping(ID_ID)
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable UUID id) {
         this.userService.delete(id);
     }
 
-    @GetMapping(SEARCH)
+    @GetMapping("/search")
     public List<UserDto> findByBillable(@RequestParam Boolean billable) {
         return this.userService.findByBillable(billable).stream()
                 .map(UserDto::new)

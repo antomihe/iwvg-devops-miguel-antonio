@@ -8,7 +8,6 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UserTest {
 
@@ -37,25 +36,21 @@ class UserTest {
 
     @Test
     void testInitialsWithNullAndEmptyValues() {
-        // Cobertura de ramificaciones para name == null y familyName == null [source: 5]
         User nullUser = new User();
         assertEquals("", nullUser.initials());
 
-        // Cobertura de ramificaciones para name.isEmpty() y familyName.isEmpty() [source: 5]
         User emptyUser = User.builder()
                 .name("")
                 .familyName("")
                 .build();
         assertEquals("", emptyUser.initials());
 
-        // Cobertura solo con nombre [source: 5]
         User onlyNameUser = User.builder()
                 .name("Antonio")
                 .familyName("")
                 .build();
         assertEquals("A.", onlyNameUser.initials());
 
-        // Cobertura solo con apellido [source: 5]
         User onlyFamilyNameUser = User.builder()
                 .name(null)
                 .familyName("Herrero")
@@ -77,6 +72,13 @@ class UserTest {
         assertEquals("Miguel", this.user.getName());
         assertEquals("Jiménez", this.user.getFamilyName());
         assertFalse(this.user.getActive());
+    }
+
+    @Test
+    void testFirstNameGetterAndSetter() {
+        this.user.setFirstName("Carlos");
+        assertEquals("Carlos", this.user.getFirstName());
+        assertEquals("Carlos", this.user.getName());
     }
 
     @Test

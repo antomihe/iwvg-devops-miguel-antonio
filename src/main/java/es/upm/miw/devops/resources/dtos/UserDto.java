@@ -1,6 +1,5 @@
 package es.upm.miw.devops.resources.dtos;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import es.upm.miw.devops.infrastructure.data.models.User;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -17,13 +16,11 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserDto {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
     @NotBlank
     private String mobile;
 
-    @NotBlank
     private String firstName;
 
     private String familyName;
@@ -32,15 +29,13 @@ public class UserDto {
 
     public UserDto(User user) {
         BeanUtils.copyProperties(user, this);
-    }
-
-    public User toDomain() {
-        User user = new User();
-        BeanUtils.copyProperties(this, user);
-        return user;
+        this.firstName = user.getFirstName();
     }
 
     public User toUser() {
-        return this.toDomain();
+        User user = new User();
+        BeanUtils.copyProperties(this, user);
+        user.setFirstName(this.firstName);
+        return user;
     }
 }
