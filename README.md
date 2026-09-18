@@ -21,6 +21,15 @@
 
 El proyecto utiliza variables de entorno para evitar registrar credenciales o secretos en el código fuente.
 
+### :gear: Instalación del proyecto
+1. Clonar el repositorio en tu equipo, **mediante consola**:
+```sh
+cd <folder path>
+git clone https://github.com/miw-upm/iwvg-devops
+```
+2. Importar el proyecto mediante **IntelliJ IDEA**
+   * **Open**, y seleccionar la carpeta del proyecto.
+
 1. Crea un archivo `.env` en la raíz del proyecto junto a los ficheros `docker-compose.yml` y `docker-compose-db.yml`:
 
 ```env
@@ -32,15 +41,6 @@ POSTGRES_PASSWORD=postgres
 # Perfil activo de Spring Boot (dev / prod / test)
 SPRING_PROFILES_ACTIVE=dev
 ```
-
-### :gear: Instalación del proyecto
-1. Clonar el repositorio en tu equipo, **mediante consola**:
-```sh
-cd <folder path>
-git clone https://github.com/miw-upm/iwvg-devops
-```
-2. Importar el proyecto mediante **IntelliJ IDEA**
-   * **Open**, y seleccionar la carpeta del proyecto.
 
 ### :gear: Ejecución en local con IntelliJ
 * Ejecutar la clase **Application** con IntelliJ
