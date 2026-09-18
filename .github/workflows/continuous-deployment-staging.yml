@@ -4,7 +4,7 @@ on:
     branches: ['staging']
 
 env:
-  REPOSITORY: ${{ github.repository }
+  REPOSITORY: ${{ github.repository }]
   GHCR_URL: ghcr.io
 
 jobs:
