@@ -12,7 +12,7 @@
 ### Estado del código
 [![DevOps](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-integration.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=antomihe_iwvg-devops-miguel-antonio&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=antomihe_iwvg-devops-miguel-antonio)
-[![Render broken](https://iwvg-devops-miguel-antonio.onrender.com/version-badge)](https://iwvg-devops-miguel-antonio.com/swagger-ui.html)
+[![Render broken](https://iwvg-devops-miguel-antonio.onrender.com/version-badge)](https://iwvg-devops-miguel-antonio.onrender.com/swagger-ui/index.html#/)
 
 
 ### Tecnologías necesarias
