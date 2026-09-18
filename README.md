@@ -17,6 +17,21 @@
 
 ### Tecnologías necesarias
 `Java` `Maven` `GitHub` `GitHub Actions` `Sonarcloud` `Slack` `Spring-Boot` `GitHub Packages` `Docker` `OpenAPI`
+### :gear: Configuración de Variables de Entorno (`.env`)
+
+El proyecto utiliza variables de entorno para evitar registrar credenciales o secretos en el código fuente.
+
+1. Crea un archivo `.env` en la raíz del proyecto junto a los ficheros `docker-compose.yml` y `docker-compose-db.yml`:
+
+```env
+# Configuración de PostgreSQL
+POSTGRES_DB=iwvg_db
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+
+# Perfil activo de Spring Boot (dev / prod / test)
+SPRING_PROFILES_ACTIVE=dev
+```
 
 ### :gear: Instalación del proyecto
 1. Clonar el repositorio en tu equipo, **mediante consola**:
@@ -42,7 +57,7 @@ docker network ls
 
 * Levantar las bases de datos (PostgreSQL, MySQL, MongoDB)::
 ```sh
-docker compose -f docker-compose-db.yml -p databases up -d
+docker compose -f docker-compose-db.yml up -d
 ````
 
 * Comando para crear imagen y arrancarla en contenedor mediante docker compose (Se utiliza el fichero **docker-compose.yml**)
