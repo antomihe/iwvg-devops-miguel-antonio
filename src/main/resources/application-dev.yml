@@ -1,11 +1,13 @@
+app:
+  hosting: render
 spring:
   config:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:postgresql://postgres-server:5432/devopsDb
-    username: postgres
-    password: postgres
+    url: { SPRING_DATASOURCE_PASSWORD }
+    username: { SPRING_DATASOURCE_URL }
+    password: {SPRING_DATASOURCE_USERNAME}
     driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false
