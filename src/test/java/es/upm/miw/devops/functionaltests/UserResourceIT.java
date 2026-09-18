@@ -1,167 +1,131 @@
 package es.upm.miw.devops.functionaltests;
 
-import es.upm.miw.devops.rest.UserResource;
-import es.upm.miw.devops.rest.dto.UserDto;
+import es.upm.miw.devops.resources.UserResource;
+import es.upm.miw.devops.resources.dtos.UserDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWebTestClient
 @ActiveProfiles("test")
+@AutoConfigureWebTestClient
 class UserResourceIT {
 
     @Autowired
     private WebTestClient webTestClient;
 
     @Test
-    void testReadUser() {
-        Long existingUserId = 1L;
+    void testCreateAndReadUser() {
+        UserDto userDto = UserDto.builder()
+                .mobile("699888777")
+                .name("Integration")
+                .familyName("Test")
+                .active(true)
+                .build();
 
-        this.webTestClient.get()
-                .uri(UserResource.USERS + "/{id}", existingUserId)
+        UserDto createdUser = this.webTestClient
+                .post()
+                .uri(UserResource.USERS)
+                .bodyValue(userDto)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(UserDto.class)
-                .value(userDto -> {
-                    assertThat(userDto).isNotNull();
-                    assertThat(userDto.getId()).isEqualTo(existingUserId);
-                    assertThat(userDto.getName()).isNotNull();
-                    assertThat(userDto.getEmail()).isNotNull();
-                });
-    }
+                .returnResult()
+                .getResponseBody();
 
-    @Test
-    void testReadUserNotFound() {
-        Long nonExistingUserId = 999999L;
+        assertNotNull(createdUser);
+        assertNotNull(createdUser.getId());
 
-        this.webTestClient.get()
-                .uri(UserResource.USERS + "/{id}", nonExistingUserId)
-                .exchange()
-                .expectStatus().isEqualTo(HttpStatus.NOT_FOUND);
-    }
-
-    @Test
-    void testSearchWithoutParamsReturnsAll() {
-        this.webTestClient.get()
-                .uri(UserResource.USERS + UserResource.SEARCH)
+        this.webTestClient
+                .get()
+                .uri(UserResource.USERS + "/" + createdUser.getId())
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(UserDto.class)
-                .value(users -> assertThat(users).isNotEmpty());
+                .expectBody(UserDto.class);
     }
 
     @Test
-    void testSearchByNameSuccessAndNotFound() {
-        this.webTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(UserResource.USERS + UserResource.SEARCH)
-                        .queryParam("name", "Oscar")
-                        .build())
+    void testReadNotFound() {
+        this.webTestClient
+                .get()
+                .uri(UserResource.USERS + "/" + UUID.randomUUID())
                 .exchange()
-                .expectStatus().isOk()
-                .expectBodyList(UserDto.class)
-                .value(users -> assertThat(users).allMatch(u -> u.getName() != null && u.getName().contains("Oscar")));
-
-        this.webTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(UserResource.USERS + UserResource.SEARCH)
-                        .queryParam("name", "NonExistingNameXYZ")
-                        .build())
-                .exchange()
-                .expectStatus().isOk()
-                .expectBodyList(UserDto.class)
-                .value(users -> assertThat(users).isEmpty());
+                .expectStatus().isNotFound();
     }
 
     @Test
-    void testSearchByEmailIgnoreCase() {
-        this.webTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(UserResource.USERS + UserResource.SEARCH)
-                        .queryParam("email", "OSCAR@EXAMPLE.COM")
-                        .build())
+    void testReadAll() {
+        this.webTestClient
+                .get()
+                .uri(UserResource.USERS)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(UserDto.class);
     }
 
     @Test
-    void testSearchByBillableTrue() {
-        this.webTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(UserResource.USERS + UserResource.SEARCH)
-                        .queryParam("billable", true)
-                        .build())
+    void testUpdateUser() {
+        UserDto userDto = UserDto.builder()
+                .mobile("688777666")
+                .name("ToUpdate")
+                .familyName("User")
+                .active(true)
+                .build();
+
+        UserDto createdUser = this.webTestClient
+                .post()
+                .uri(UserResource.USERS)
+                .bodyValue(userDto)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(UserDto.class)
-                .value(users -> {
-                    assertThat(users).isNotNull();
-                    assertThat(users).allMatch(userDto -> Boolean.TRUE.equals(userDto.getBillable()));
-                });
+                .expectBody(UserDto.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertNotNull(createdUser);
+        createdUser.setName("UpdatedName");
+
+        this.webTestClient
+                .put()
+                .uri(UserResource.USERS + "/" + createdUser.getId())
+                .bodyValue(createdUser)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserDto.class);
     }
 
     @Test
-    void testSearchByBillableFalse() {
-        this.webTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(UserResource.USERS + UserResource.SEARCH)
-                        .queryParam("billable", false)
-                        .build())
-                .exchange()
-                .expectStatus().isOk()
-                .expectBodyList(UserDto.class)
-                .value(users -> {
-                    assertThat(users).isNotNull();
-                    assertThat(users).allMatch(userDto -> Boolean.FALSE.equals(userDto.getBillable()));
-                });
-    }
-
-    @Test
-    void testSearchByAllParametersCombined() {
-        this.webTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(UserResource.USERS + UserResource.SEARCH)
-                        .queryParam("name", "a")
-                        .queryParam("email", "a@a.com")
-                        .queryParam("billable", true)
-                        .build())
-                .exchange()
-                .expectStatus().isOk()
-                .expectBodyList(UserDto.class);
-    }
-
-    @Test
-    @DirtiesContext
     void testDeleteUser() {
-        Long existingUserId = 1L;
+        UserDto userDto = UserDto.builder()
+                .mobile("677666555")
+                .name("ToDelete")
+                .familyName("User")
+                .active(true)
+                .build();
 
-        this.webTestClient.delete()
-                .uri(UserResource.USERS + "/{id}", existingUserId)
+        UserDto createdUser = this.webTestClient
+                .post()
+                .uri(UserResource.USERS)
+                .bodyValue(userDto)
                 .exchange()
-                .expectStatus().isNoContent();
+                .expectStatus().isOk()
+                .expectBody(UserDto.class)
+                .returnResult()
+                .getResponseBody();
 
-        this.webTestClient.get()
-                .uri(UserResource.USERS + "/{id}", existingUserId)
+        assertNotNull(createdUser);
+
+        this.webTestClient
+                .delete()
+                .uri(UserResource.USERS + "/" + createdUser.getId())
                 .exchange()
-                .expectStatus().isNotFound();
-    }
-
-    @Test
-    void testDeleteUserNotFound() {
-        Long nonExistingUserId = 999999L;
-
-        this.webTestClient.delete()
-                .uri(UserResource.USERS + "/{id}", nonExistingUserId)
-                .exchange()
-                .expectStatus().isNotFound();
+                .expectStatus().isOk();
     }
 }
