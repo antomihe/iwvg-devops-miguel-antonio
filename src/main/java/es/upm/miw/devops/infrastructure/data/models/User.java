@@ -34,6 +34,14 @@ public class User {
 
     private Boolean active;
 
+    public String getFirstName() {
+        return this.name;
+    }
+
+    public void setFirstName(String firstName) {
+        this.name = firstName;
+    }
+
     public String fullName() {
         return this.name + " " + this.familyName;
     }

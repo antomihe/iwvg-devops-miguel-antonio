@@ -18,4 +18,8 @@ public class ActiveDto {
 
     @NotNull
     private Boolean active;
+
+    public ActiveDto(Boolean active) {
+        this.active = active;
+    }
 }
