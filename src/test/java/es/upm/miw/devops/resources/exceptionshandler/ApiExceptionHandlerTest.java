@@ -5,7 +5,7 @@ import es.upm.miw.devops.services.exceptions.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ApiExceptionHandlerTest {
 
@@ -18,28 +18,31 @@ class ApiExceptionHandlerTest {
 
     @Test
     void testNotFoundRequest() {
-        NotFoundException exception = new NotFoundException("Not found");
-        ErrorMessage errorMessage = this.apiExceptionHandler.notFoundRequest(exception);
+        NotFoundException exception = new NotFoundException("Not found test");
+        ErrorMessage message = this.apiExceptionHandler.notFoundRequest(exception);
 
-        assertEquals("NotFoundException", errorMessage.getError());
-        assertEquals("Not found", errorMessage.getMessage());
+        assertThat(message.getError()).isEqualTo("NotFoundException");
+        assertThat(message.getMessage()).isEqualTo("Not found test");
+        assertThat(message.getCode()).contains("404");
     }
 
     @Test
     void testConflictRequest() {
-        ConflictException exception = new ConflictException("Conflict");
-        ErrorMessage errorMessage = this.apiExceptionHandler.conflictRequest(exception);
+        ConflictException exception = new ConflictException("Conflict test");
+        ErrorMessage message = this.apiExceptionHandler.conflictRequest(exception);
 
-        assertEquals("ConflictException", errorMessage.getError());
-        assertEquals("Conflict", errorMessage.getMessage());
+        assertThat(message.getError()).isEqualTo("ConflictException");
+        assertThat(message.getMessage()).isEqualTo("Conflict test");
+        assertThat(message.getCode()).contains("409");
     }
 
     @Test
     void testFatalErrorUnexpected() {
-        Exception exception = new Exception("Unexpected");
-        ErrorMessage errorMessage = this.apiExceptionHandler.fatalErrorUnexpected(exception);
+        RuntimeException exception = new RuntimeException("Unexpected test error");
+        ErrorMessage message = this.apiExceptionHandler.fatalErrorUnexpected(exception);
 
-        assertEquals("Exception", errorMessage.getError());
-        assertEquals("Unexpected", errorMessage.getMessage());
+        assertThat(message.getError()).isEqualTo("RuntimeException");
+        assertThat(message.getMessage()).isEqualTo("Unexpected test error");
+        assertThat(message.getCode()).contains("500");
     }
 }

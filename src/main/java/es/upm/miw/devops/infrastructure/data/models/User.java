@@ -32,55 +32,8 @@ public class User {
 
     private String familyName;
 
-    private Boolean active;
-
-    public UUID getId() {
-        return this.id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getMobile() {
-        return this.mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getFamilyName() {
-        return this.familyName;
-    }
-
-    public void setFamilyName(String familyName) {
-        this.familyName = familyName;
-    }
-
-    public Boolean getActive() {
-        return this.active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public String getFirstName() {
-        return this.name;
-    }
-
-    public void setFirstName(String firstName) {
-        this.name = firstName;
-    }
+    @Column(name = "active")
+    private Boolean isActive;
 
     public String fullName() {
         return this.name + " " + this.familyName;

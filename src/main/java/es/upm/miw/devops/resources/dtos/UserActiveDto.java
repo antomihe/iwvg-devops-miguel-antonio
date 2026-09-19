@@ -1,7 +1,6 @@
 package es.upm.miw.devops.resources.dtos;
 
 import es.upm.miw.devops.infrastructure.data.models.User;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,32 +14,24 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class UserActiveDto {
 
     private UUID id;
 
-    @NotBlank
-    private String mobile;
-
-    @NotBlank
-    private String firstName;
-
-    @NotBlank
-    private String familyName;
-
-    @Builder.Default
     @NotNull
-    private Boolean isActive = false;
+    private Boolean isActive;
 
-    public UserDto(User user) {
+    public UserActiveDto(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public UserActiveDto(User user) {
         BeanUtils.copyProperties(user, this);
-        this.firstName = user.getName();
     }
 
     public User toUser() {
         User user = new User();
         BeanUtils.copyProperties(this, user);
-        user.setName(this.firstName);
         return user;
     }
 }

@@ -1,8 +1,10 @@
 package es.upm.miw.devops.resources;
 
-import es.upm.miw.devops.resources.dtos.ActiveDto;
+import es.upm.miw.devops.infrastructure.data.models.User;
+import es.upm.miw.devops.resources.dtos.UserActiveDto;
 import es.upm.miw.devops.resources.dtos.UserDto;
 import es.upm.miw.devops.services.UserService;
+import es.upm.miw.devops.services.criteria.UserFindCriteria;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,10 @@ import java.util.UUID;
 public class UserResource {
 
     public static final String USERS = "/users";
+    public static final String ID_ID = "/{id}";
+    public static final String ACTIVE = "/active";
+    public static final String ID_ACTIVE = "/{id}/active";
+    public static final String SEARCH = "/search";
 
     private final UserService userService;
 
@@ -26,7 +32,7 @@ public class UserResource {
                 .toList();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(ID_ID)
     public UserDto read(@PathVariable UUID id) {
         return new UserDto(this.userService.read(id));
     }
@@ -36,36 +42,34 @@ public class UserResource {
         return new UserDto(this.userService.create(userDto.toUser()));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(ID_ID)
     public UserDto update(@PathVariable UUID id, @Valid @RequestBody UserDto userDto) {
         return new UserDto(this.userService.update(id, userDto.toUser()));
     }
 
-    @PatchMapping("/{id}/active")
-    public UserDto updateActive(@PathVariable UUID id, @RequestBody ActiveDto activeDto) {
-        return new UserDto(this.userService.updateActive(id, activeDto.getActive()));
+    @PatchMapping(ID_ACTIVE)
+    public UserDto updateActive(@PathVariable UUID id, @Valid @RequestBody UserActiveDto userActiveDto) {
+        return new UserDto(this.userService.updateActive(id, userActiveDto.getIsActive()));
     }
 
-    @PutMapping("/{id}/active")
-    public UserDto updateActivePut(@PathVariable UUID id, @RequestBody ActiveDto activeDto) {
-        return new UserDto(this.userService.updateActive(id, activeDto.getActive()));
-    }
-
-    @PatchMapping("/active")
-    public List<UserDto> updateActiveList(@RequestBody List<ActiveDto> activeDtoList) {
-        return this.userService.updateActiveList(activeDtoList).stream()
+    @PatchMapping(ACTIVE)
+    public List<UserDto> updateActiveList(@Valid @RequestBody List<@Valid UserActiveDto> userActiveDtoList) {
+        List<User> users = userActiveDtoList.stream()
+                .map(UserActiveDto::toUser)
+                .toList();
+        return this.userService.updateActiveList(users).stream()
                 .map(UserDto::new)
                 .toList();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(ID_ID)
     public void delete(@PathVariable UUID id) {
         this.userService.delete(id);
     }
 
-    @GetMapping("/search")
-    public List<UserDto> findByBillable(@RequestParam Boolean billable) {
-        return this.userService.findByBillable(billable).stream()
+    @GetMapping(SEARCH)
+    public List<UserDto> findByCriteria(@ModelAttribute UserFindCriteria userFindCriteria) {
+        return this.userService.findByCriteria(userFindCriteria).stream()
                 .map(UserDto::new)
                 .toList();
     }

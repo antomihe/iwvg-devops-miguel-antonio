@@ -26,7 +26,7 @@ class UserRepositoryIT {
                 .mobile("600111222")
                 .name("Test")
                 .familyName("User")
-                .active(true)
+                .isActive(true)
                 .build();
         this.userRepository.save(user);
 
@@ -40,7 +40,7 @@ class UserRepositoryIT {
                 .mobile("600333444")
                 .name("Test2")
                 .familyName("User2")
-                .active(true)
+                .isActive(true)
                 .build();
         this.userRepository.save(user);
 
