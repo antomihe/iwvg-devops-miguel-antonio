@@ -3,9 +3,9 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres-server:5432/devopsDb}
-    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    url: ${POSTGRES_URL:jdbc:postgresql://postgres-server:5432/iwvg_db}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false
@@ -17,3 +17,12 @@ logging:
   level:
     root: ERROR
     es.upm.miw: INFO
+
+springdoc:
+  api-docs:
+    enabled: false # IMPORTANT! false in prod
+  swagger-ui:
+    enabled: false # IMPORTANT! false in prod
+
+app:
+  hosting: AWS
