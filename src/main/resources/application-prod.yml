@@ -1,28 +1,17 @@
+server:
+  port: 10000
+
 spring:
-  config:
-    activate:
-      on-profile: prod
   datasource:
-    url: ${POSTGRES_URL:jdbc:postgresql://postgres-server:5432/iwvg_db}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://postgres-server:5432/devops_db
+    username: postgres
+    password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
-    open-in-view: false
     hibernate:
       ddl-auto: validate
     show-sql: false
-
-logging:
-  level:
-    root: ERROR
-    es.upm.miw: INFO
-
-springdoc:
-  api-docs:
-    enabled: false # IMPORTANT! false in prod
-  swagger-ui:
-    enabled: false # IMPORTANT! false in prod
-
-app:
-  hosting: AWS
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
