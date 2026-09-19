@@ -18,6 +18,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
     public User create(User user) {
         this.assertMobileNotExist(user.getMobile());
         user.setId(null);
@@ -33,6 +34,7 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("User id not found: " + id));
     }
 
+    // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
     public User update(UUID id, User user) {
         User existingUser = this.read(id);
         if (!existingUser.getMobile().equals(user.getMobile())) {
