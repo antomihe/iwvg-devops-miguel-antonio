@@ -2,7 +2,7 @@ package es.upm.miw.devops.services;
 
 import es.upm.miw.devops.infrastructure.data.daos.UserRepository;
 import es.upm.miw.devops.infrastructure.data.models.User;
-import es.upm.miw.devops.resources.dtos.ActiveDto;
+import es.upm.miw.devops.services.criteria.UserFindCriteria;
 import es.upm.miw.devops.services.exceptions.ConflictException;
 import es.upm.miw.devops.services.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -44,13 +44,13 @@ public class UserService {
 
     public User updateActive(UUID id, Boolean active) {
         User user = this.read(id);
-        user.setActive(active);
+        user.setIsActive(active);
         return this.userRepository.save(user);
     }
 
-    public List<User> updateActiveList(List<ActiveDto> activeDtoList) {
-        return activeDtoList.stream()
-                .map(activeDto -> this.updateActive(activeDto.getId(), activeDto.getActive()))
+    public List<User> updateActiveList(List<User> users) {
+        return users.stream()
+                .map(user -> this.updateActive(user.getId(), user.getIsActive()))
                 .toList();
     }
 
@@ -60,14 +60,14 @@ public class UserService {
         }
     }
 
-    public List<User> findByBillable(Boolean billable) {
+    public List<User> findByCriteria(UserFindCriteria userFindCriteria) {
         return this.userRepository.findAll().stream()
-                .filter(user -> this.isBillable(user) == billable)
+                .filter(user -> userFindCriteria.getIsBillable() == null || this.isBillable(user) == userFindCriteria.getIsBillable())
                 .toList();
     }
 
     private boolean isBillable(User user) {
-        return user.getFirstName() != null && !user.getFirstName().isBlank() &&
+        return user.getName() != null && !user.getName().isBlank() &&
                 user.getFamilyName() != null && !user.getFamilyName().isBlank() &&
                 user.getMobile() != null && !user.getMobile().isBlank();
     }
