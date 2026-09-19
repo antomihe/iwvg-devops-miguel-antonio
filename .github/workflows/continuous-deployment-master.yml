@@ -62,10 +62,12 @@ jobs:
               --memory 512m \
               --memory-swap 1024m \
               --network devopsNet \
-              -p 80:10000 \
+              -p 80:8080 \
               -e SPRING_PROFILES_ACTIVE=prod \
+              -e SPRING_DATASOURCE_URL="jdbc:postgresql://postgres-server:5432/${{ secrets.POSTGRES_DB }}" \
               -e SPRING_DATASOURCE_USERNAME="${{ secrets.POSTGRES_USER }}" \
               -e SPRING_DATASOURCE_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" \
+              -e JAVA_OPTS="-XX:MaxRAMPercentage=75.0" \
               ghcr.io/${{ env.REPOSITORY }}:${{ env.VERSION }}
 
             echo "⏳ Esperando a que se levante"
