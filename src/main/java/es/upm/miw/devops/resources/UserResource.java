@@ -47,13 +47,11 @@ public class UserResource {
         return new UserDto(this.userService.update(id, userDto.toUser()));
     }
 
-    // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
     @PatchMapping(ID_ACTIVE)
     public UserDto updateActive(@PathVariable UUID id, @Valid @RequestBody UserActiveDto userActiveDto) {
         return new UserDto(this.userService.updateActive(id, userActiveDto.getIsActive()));
     }
 
-    // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
     @PatchMapping(ACTIVE)
     public List<UserDto> updateActiveList(@Valid @RequestBody List<@Valid UserActiveDto> userActiveDtoList) {
         List<User> users = userActiveDtoList.stream()

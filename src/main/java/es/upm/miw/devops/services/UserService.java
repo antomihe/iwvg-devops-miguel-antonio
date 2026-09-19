@@ -42,14 +42,12 @@ public class UserService {
         return this.userRepository.save(existingUser);
     }
 
-    // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
     public User updateActive(UUID id, Boolean active) {
         User user = this.read(id);
         user.setIsActive(active);
         return this.userRepository.save(user);
     }
 
-    // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
     public List<User> updateActiveList(List<User> users) {
         return users.stream()
                 .map(user -> this.updateActive(user.getId(), user.getIsActive()))

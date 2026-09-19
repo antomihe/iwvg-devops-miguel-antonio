@@ -73,7 +73,6 @@ class UserResourceFT {
                 .expectBody(UserDto.class)
                 .value(updated -> assertThat(updated.getFirstName()).isEqualTo("UpdatedName"));
 
-        // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
         // 5. PATCH /users/{id}/active
         UserActiveDto activeDto = new UserActiveDto(false);
         this.webTestClient.patch()
@@ -84,7 +83,6 @@ class UserResourceFT {
                 .expectBody(UserDto.class)
                 .value(patched -> assertThat(patched.getIsActive()).isFalse());
 
-        // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
         // 6. PATCH /users/active
         UserActiveDto activeItem = UserActiveDto.builder().id(userId).isActive(true).build();
         this.webTestClient.patch()
