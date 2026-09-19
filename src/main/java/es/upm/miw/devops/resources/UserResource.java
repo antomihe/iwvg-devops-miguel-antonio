@@ -37,13 +37,11 @@ public class UserResource {
         return new UserDto(this.userService.read(id));
     }
 
-    // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
     @PostMapping
     public UserDto create(@Valid @RequestBody UserDto userDto) {
         return new UserDto(this.userService.create(userDto.toUser()));
     }
 
-    // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
     @PutMapping(ID_ID)
     public UserDto update(@PathVariable UUID id, @Valid @RequestBody UserDto userDto) {
         return new UserDto(this.userService.update(id, userDto.toUser()));

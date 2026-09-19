@@ -45,7 +45,6 @@ class UserServiceTest {
                 .build();
     }
 
-    // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
     @Test
     void testCreateSuccess() {
         when(this.userRepository.existsByMobile("600000001")).thenReturn(false);
@@ -58,7 +57,6 @@ class UserServiceTest {
         verify(this.userRepository).save(any(User.class));
     }
 
-    // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
     @Test
     void testCreateConflict() {
         when(this.userRepository.existsByMobile("600000001")).thenReturn(true);
@@ -95,7 +93,6 @@ class UserServiceTest {
                 .hasMessageContaining(this.id.toString());
     }
 
-    // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
     @Test
     void testUpdateSuccessSameMobile() {
         when(this.userRepository.findById(this.id)).thenReturn(Optional.of(this.user));
@@ -108,7 +105,6 @@ class UserServiceTest {
         assertThat(result.getId()).isEqualTo(this.id);
     }
 
-    // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
     @Test
     void testUpdateSuccessDifferentMobile() {
         when(this.userRepository.findById(this.id)).thenReturn(Optional.of(this.user));
@@ -121,7 +117,6 @@ class UserServiceTest {
         assertThat(result.getMobile()).isEqualTo("600000002");
     }
 
-    // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
     @Test
     void testUpdateConflictDifferentMobile() {
         when(this.userRepository.findById(this.id)).thenReturn(Optional.of(this.user));
@@ -133,7 +128,6 @@ class UserServiceTest {
                 .isInstanceOf(ConflictException.class);
     }
 
-    // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
     @Test
     void testUpdateActive() {
         when(this.userRepository.findById(this.id)).thenReturn(Optional.of(this.user));
