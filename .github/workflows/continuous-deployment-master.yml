@@ -64,7 +64,7 @@ jobs:
               --memory 512m \
               --memory-swap 1024m \
               --network devopsNet \
-              -p 80:8080 \
+              -p 80:10000 \
               -e SPRING_PROFILES_ACTIVE=prod \
               -e SPRING_DATASOURCE_URL="jdbc:postgresql://postgres-server:5432/${{ secrets.POSTGRES_DB }}" \
               -e SPRING_DATASOURCE_USERNAME="${{ secrets.POSTGRES_USER }}" \

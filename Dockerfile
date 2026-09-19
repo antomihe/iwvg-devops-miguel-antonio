@@ -15,8 +15,8 @@ RUN addgroup -S app && adduser -S app -G app
 COPY --from=build /app/*.jar app.jar
 USER app
 
-EXPOSE 8080
+EXPOSE 10000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
-  CMD wget -qO- http://localhost:8080/actuator/health || exit 1
+  CMD wget -qO- http://localhost:10000/actuator/health || exit 1
 
 ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar app.jar"]
