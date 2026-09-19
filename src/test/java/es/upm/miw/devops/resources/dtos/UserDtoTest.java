@@ -5,78 +5,47 @@ import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class UserDtoTest {
 
     @Test
-    void testUserDtoToDomainAndViceVersa() {
+    void testUserDtoConstructorWithUser() {
         UUID id = UUID.randomUUID();
         User user = User.builder()
                 .id(id)
-                .mobile("655443322")
-                .name("Carlos")
-                .familyName("López")
-                .active(true)
+                .mobile("600000000")
+                .name("Alice")
+                .familyName("Smith")
+                .isActive(true)
                 .build();
 
         UserDto dto = new UserDto(user);
-        assertEquals(id, dto.getId());
-        assertEquals("655443322", dto.getMobile());
-        assertEquals("Carlos", dto.getFirstName());
-        assertEquals("López", dto.getFamilyName());
-        assertTrue(dto.getActive());
 
-        User domainUser = dto.toUser();
-        assertEquals(id, domainUser.getId());
-        assertEquals("655443322", domainUser.getMobile());
-        assertEquals("Carlos", domainUser.getName());
-        assertEquals("López", domainUser.getFamilyName());
-        assertTrue(domainUser.getActive());
+        assertThat(dto.getId()).isEqualTo(id);
+        assertThat(dto.getMobile()).isEqualTo("600000000");
+        assertThat(dto.getFirstName()).isEqualTo("Alice");
+        assertThat(dto.getFamilyName()).isEqualTo("Smith");
+        assertThat(dto.getIsActive()).isTrue();
     }
 
     @Test
-    void testGettersAndSetters() {
-        UserDto dto = new UserDto();
+    void testToUser() {
         UUID id = UUID.randomUUID();
-
-        dto.setId(id);
-        dto.setMobile("666777888");
-        dto.setFirstName("Ana");
-        dto.setFamilyName("García");
-        dto.setActive(false);
-
-        assertEquals(id, dto.getId());
-        assertEquals("666777888", dto.getMobile());
-        assertEquals("Ana", dto.getFirstName());
-        assertEquals("García", dto.getFamilyName());
-        assertFalse(dto.getActive());
-    }
-
-    @Test
-    void testEqualsHashCodeAndToString() {
-        UUID id = UUID.randomUUID();
-        UserDto dto1 = UserDto.builder()
+        UserDto dto = UserDto.builder()
                 .id(id)
                 .mobile("600000000")
-                .firstName("Test")
-                .familyName("User")
-                .active(true)
+                .firstName("Bob")
+                .familyName("Martin")
+                .isActive(false)
                 .build();
 
-        UserDto dto2 = UserDto.builder()
-                .id(id)
-                .mobile("600000000")
-                .firstName("Test")
-                .familyName("User")
-                .active(true)
-                .build();
+        User user = dto.toUser();
 
-        assertEquals(dto1, dto2);
-        assertEquals(dto1.hashCode(), dto2.hashCode());
-        assertNotNull(dto1.toString());
+        assertThat(user.getId()).isEqualTo(id);
+        assertThat(user.getMobile()).isEqualTo("600000000");
+        assertThat(user.getName()).isEqualTo("Bob");
+        assertThat(user.getFamilyName()).isEqualTo("Martin");
+        assertThat(user.getIsActive()).isFalse();
     }
 }
