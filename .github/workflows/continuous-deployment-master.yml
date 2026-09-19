@@ -52,17 +52,17 @@ jobs:
           key: ${{ secrets.AWS_LIGHTSAIL_SSH_KEY_MAIN }}
           script_stop: true
           script: |
-            printf '%s' "${{ secrets.GHCR_PERSONAL_ACCESS_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            printf '%s' "${{ secrets.GHCR_PERSONAL_ACCESS_TOKEN }}" | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-            docker pull ghcr.io/${{ env.REPOSITORY }}:${{ env.VERSION }}
-            docker rm -f ${{ env.ARTIFACT }} || true
-            docker run -d \
+            sudo docker pull ghcr.io/${{ env.REPOSITORY }}:${{ env.VERSION }}
+            sudo docker rm -f ${{ env.ARTIFACT }} || true
+            sudo docker run -d \
               --name ${{ env.ARTIFACT }} \
               --restart always \
               --memory 512m \
               --memory-swap 1024m \
               --network devopsNet \
-              -p 80:8080 \
+              -p 8080:8080 \
               -e SPRING_PROFILES_ACTIVE=prod \
               -e SPRING_DATASOURCE_URL="jdbc:postgresql://postgres-server:5432/${{ secrets.POSTGRES_DB }}" \
               -e SPRING_DATASOURCE_USERNAME="${{ secrets.POSTGRES_USER }}" \
@@ -83,12 +83,12 @@ jobs:
 
             if [ "$HEALTHY" != "true" ]; then
               echo "❌ Deploy fallido"
-              docker logs --tail 50 ${{ env.ARTIFACT }}
+              sudo docker logs --tail 50 ${{ env.ARTIFACT }}
               exit 1
             fi
 
             echo "✅ Deploy exitoso"
-            docker image prune --filter "until=12h" -f
+            sudo docker image prune --filter "until=12h" -f
 
       - name: ✅ Public health check
         run: |
