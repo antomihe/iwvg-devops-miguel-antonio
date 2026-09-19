@@ -94,5 +94,5 @@ jobs:
       - name: ✅ Public health check
         run: |
           curl --fail --silent --show-error --retry 6 --retry-delay 10 --retry-all-errors \
-            "http://${{ secrets.LIGHTSAIL_HOST }}/actuator/health"
+            "http://${{ secrets.AWS_LIGHTSAIL_IP_MAIN }}/actuator/health"
           
