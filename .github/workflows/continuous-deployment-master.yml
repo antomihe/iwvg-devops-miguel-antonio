@@ -1,4 +1,4 @@
-name: CD PRO
+name: CD PROD
 on:
   push:
     branches: [master]
@@ -52,21 +52,22 @@ jobs:
           key: ${{ secrets.AWS_LIGHTSAIL_SSH_KEY_MAIN }}
           script_stop: true
           script: |
-            printf '%s' "${{ secrets.GHCR_PERSONAL_ACCESS_TOKEN }}" | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            printf '%s' "${{ secrets.GHCR_PERSONAL_ACCESS_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-            sudo docker pull ghcr.io/${{ env.REPOSITORY }}:${{ env.VERSION }}
-            sudo docker rm -f ${{ env.ARTIFACT }} || true
-            sudo docker run -d \
+            docker pull ghcr.io/${{ env.REPOSITORY }}:${{ env.VERSION }}
+            docker rm -f ${{ env.ARTIFACT }} || true
+            docker run -d \
               --name ${{ env.ARTIFACT }} \
               --restart always \
               --memory 512m \
               --memory-swap 1024m \
               --network devopsNet \
-              -p 80:8080 \
+              -p 80:10000 \
               -e SPRING_PROFILES_ACTIVE=prod \
               -e SPRING_DATASOURCE_URL="jdbc:postgresql://postgres-server:5432/${{ secrets.POSTGRES_DB }}" \
               -e SPRING_DATASOURCE_USERNAME="${{ secrets.POSTGRES_USER }}" \
               -e SPRING_DATASOURCE_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" \
+              -e SPRING_JPA_HIBERNATE_DDL_AUTO=update \
               -e JAVA_OPTS="-XX:MaxRAMPercentage=75.0" \
               ghcr.io/${{ env.REPOSITORY }}:${{ env.VERSION }}
 
@@ -83,12 +84,12 @@ jobs:
 
             if [ "$HEALTHY" != "true" ]; then
               echo "❌ Deploy fallido"
-              sudo docker logs --tail 50 ${{ env.ARTIFACT }}
+              docker logs --tail 50 ${{ env.ARTIFACT }}
               exit 1
             fi
 
             echo "✅ Deploy exitoso"
-            sudo docker image prune --filter "until=12h" -f
+            docker image prune --filter "until=12h" -f
 
       - name: ✅ Public health check
         run: |
