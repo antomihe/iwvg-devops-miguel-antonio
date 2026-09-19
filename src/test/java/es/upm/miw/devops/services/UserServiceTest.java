@@ -128,6 +128,7 @@ class UserServiceTest {
                 .isInstanceOf(ConflictException.class);
     }
 
+    // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
     @Test
     void testUpdateActive() {
         when(this.userRepository.findById(this.id)).thenReturn(Optional.of(this.user));
@@ -138,6 +139,7 @@ class UserServiceTest {
         assertThat(result.getIsActive()).isFalse();
     }
 
+    // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
     @Test
     void testUpdateActiveList() {
         when(this.userRepository.findById(this.id)).thenReturn(Optional.of(this.user));
