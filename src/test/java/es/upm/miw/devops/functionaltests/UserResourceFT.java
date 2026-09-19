@@ -63,6 +63,7 @@ class UserResourceFT {
                 .expectBody(UserDto.class)
                 .value(found -> assertThat(found.getFirstName()).isEqualTo("TestName"));
 
+        // MOCK COMMIT - THIS WOULD BE ADDED IN REGULAR DEVELOP
         // 4. PUT /users/{id}
         createdUser.setFirstName("UpdatedName");
         this.webTestClient.put()
