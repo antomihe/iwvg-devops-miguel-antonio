@@ -6,7 +6,7 @@ on:
 
 jobs:
   cd:
-    name: Build & Push GitHub Package & Deploy on Render Docker Image
+    name: Build & Push GitHub Package & Deploy on AWS Docker Image
     runs-on: ubuntu-22.04
 
     steps:
@@ -22,7 +22,7 @@ jobs:
           java-version: 21
           cache: maven
 
-      - name: 🏷️ Prepare container image metadata (repository in lowercase, artifact, version...)
+      - name: 🏷️ Prepare container image metadata
         run: |
           echo "REPOSITORY=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
           echo "ARTIFACT=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)" >> $GITHUB_ENV          
@@ -35,8 +35,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_PERSONAL_ACCESS_TOKEN }}
 
+      - name: 🔧 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: 🐳 Build & Push Docker image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
@@ -44,7 +47,6 @@ jobs:
           tags: |
             ghcr.io/${{ env.REPOSITORY }}:${{ env.VERSION }}
             ghcr.io/${{ env.REPOSITORY }}:latest
-
 
       - name: 🚀 Deploy on AWS Lightsail
         uses: appleboy/ssh-action@v1.2.1
@@ -54,6 +56,9 @@ jobs:
           key: ${{ secrets.AWS_LIGHTSAIL_SSH_KEY_MAIN }}
           script: |
             echo ${{ secrets.GHCR_PERSONAL_ACCESS_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            # Ensure network exists
+            docker network create devops 2>/dev/null || true
 
             docker pull ghcr.io/${{ env.REPOSITORY }}:latest
             docker rm -f ${{ env.ARTIFACT }} || true
@@ -73,15 +78,25 @@ jobs:
             for i in $(seq 1 6); do
               sleep 15
               STATUS=$(docker inspect --format='{{.State.Health.Status}}' ${{ env.ARTIFACT }} 2>/dev/null)
+            
+              # Fallback to checking if container is running if no HEALTHCHECK is defined in Dockerfile
+              if [ -z "$STATUS" ] || [ "$STATUS" = "<no value>" ]; then
+                RUNNING=$(docker inspect --format='{{.State.Running}}' ${{ env.ARTIFACT }} 2>/dev/null)
+                if [ "$RUNNING" = "true" ]; then
+                  STATUS="running (no healthcheck)"
+                  break
+                fi
+              fi
+
               echo "Intento $i: $STATUS"
               [ "$STATUS" = "healthy" ] && break
             done
 
-            if [ "$STATUS" != "healthy" ]; then
+            if [ "$STATUS" != "healthy" ] && [ "$STATUS" != "running (no healthcheck)" ]; then
               echo "❌ Deploy fallido"
               docker logs --tail 50 ${{ env.ARTIFACT }}
               exit 1
             fi
 
-            echo "✅ Deploy exitoso"
+            echo "✅ Deploy exitoso ($STATUS)"
             docker image prune --filter "until=12h" -f
