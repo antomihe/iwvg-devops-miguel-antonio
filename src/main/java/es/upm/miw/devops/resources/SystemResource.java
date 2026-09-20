@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SystemResource {
 
     public static final String VERSION_BADGE = "/version-badge";
+    public static final String VERSION_BADGE_STAGING = "/version-badge-staging";
     private static final String BADGE_IMAGE_TEMPLATE = """
             <svg xmlns="http://www.w3.org/2000/svg" width="%d" height="20">
                 <linearGradient id="a" x2="0" y2="100%%">
@@ -67,4 +68,10 @@ public class SystemResource {
     public byte[] generateBadge() {
         return this.generateBadge("Render", "v" + this.version).getBytes();
     }
+
+    @GetMapping(value = VERSION_BADGE_STAGING, produces = {"image/svg+xml"})
+    public byte[] generateBadgeStaging() {
+        return this.generateBadge("AWS", "v" + this.version).getBytes();
+    }
+
 }

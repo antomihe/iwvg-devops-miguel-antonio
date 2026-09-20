@@ -1,4 +1,4 @@
-name: CD PROD DB
+name: CD MASTER DB
 on:
   push:
     branches:
