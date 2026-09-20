@@ -19,7 +19,7 @@ ___
 
 #### CI/CD & Calidad
 [![CI](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-integration.yml)
-[![CD Staging](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-deployment-staging.yml/badge.svg)](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-deployment-staging.yml)
+[![CD Staging](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-deployment-staging.yml/badge.svg?branch=staging)](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-deployment-staging.yml)
 [![CD Master](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-deployment-master.yml/badge.svg)](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-deployment-master.yml)
 [![CD Master DB](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-deployment-master-db.yml/badge.svg)](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-deployment-master-db.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=antomihe_iwvg-devops-miguel-antonio&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=antomihe_iwvg-devops-miguel-antonio)
