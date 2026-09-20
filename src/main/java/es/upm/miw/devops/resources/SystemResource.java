@@ -66,12 +66,12 @@ public class SystemResource {
 
     @GetMapping(value = VERSION_BADGE, produces = {"image/svg+xml"})
     public byte[] generateBadge() {
-        return this.generateBadge("Render", "v" + this.version).getBytes();
+        return this.generateBadge("AWS", "v" + this.version).getBytes();
     }
 
     @GetMapping(value = VERSION_BADGE_STAGING, produces = {"image/svg+xml"})
     public byte[] generateBadgeStaging() {
-        return this.generateBadge("AWS", "v" + this.version).getBytes();
+        return this.generateBadge("Render", "v" + this.version).getBytes();
     }
 
 }
