@@ -49,8 +49,6 @@ ___
 
 ### Tecnologías necesarias
 `Java` `Maven` `GitHub` `GitHub Actions` `Sonarcloud` `Slack` `Spring-Boot` `GitHub Packages` `Docker` `OpenAPI`
-### :gear: Configuración de Variables de Entorno (`.env`)
-El proyecto utiliza variables de entorno para evitar registrar credenciales o secretos en el código fuente.
 
 ___
 
