@@ -1,7 +1,7 @@
 ## [Máster en Ingeniería Web por la Universidad Politécnica de Madrid (miw-upm)](http://miw.etsisi.upm.es)
 ## Ingeniería Web: Visión General (IWVG) DevOps
 > Este proyecto es un apoyo docente de la asignatura. Cada release liberada corresponde al código utilizado en clase del curso indicado
-<!-- Badges Generales e Información del Repositorio -->
+
 [![GitHub License](https://img.shields.io/github/license/antomihe/iwvg-devops-miguel-antonio?color=blue&style=flat-square)](https://github.com/antomihe/iwvg-devops-miguel-antonio/blob/develop/LICENSE.md)
 [![Latest Release](https://img.shields.io/github/v/release/antomihe/iwvg-devops-miguel-antonio?color=blue&style=flat-square)](https://github.com/antomihe/iwvg-devops-miguel-antonio/releases)
 [![Release Date](https://img.shields.io/github/release-date/antomihe/iwvg-devops-miguel-antonio?color=blue&style=flat-square)](https://github.com/antomihe/iwvg-devops-miguel-antonio/releases)
@@ -9,7 +9,16 @@
 [![Open Issues](https://img.shields.io/github/issues/antomihe/iwvg-devops-miguel-antonio?color=important&style=flat-square)](https://github.com/antomihe/iwvg-devops-miguel-antonio/issues)
 [![Closed Issues](https://img.shields.io/github/issues-closed/antomihe/iwvg-devops-miguel-antonio?color=informational&style=flat-square)](https://github.com/antomihe/iwvg-devops-miguel-antonio/issues?q=is%3Aissue+is%3Aclosed)
 
-<!-- Gestión y Registro de Paquetes -->
+___
+
+### Ramas Principales del Proyecto
+[![Branch master](https://img.shields.io/badge/branch-master-red?style=flat-square&logo=git&logoColor=white)](https://github.com/antomihe/iwvg-devops-miguel-antonio/tree/master)
+[![Branch staging](https://img.shields.io/badge/branch-staging-orange?style=flat-square&logo=git&logoColor=white)](https://github.com/antomihe/iwvg-devops-miguel-antonio/tree/staging)
+[![Branch develop](https://img.shields.io/badge/branch-develop-green?style=flat-square&logo=git&logoColor=white)](https://github.com/antomihe/iwvg-devops-miguel-antonio/tree/develop)
+
+___
+
+### Gestión & Registro de Contenedores
 [![GitHub Projects](https://img.shields.io/badge/GitHub_Projects-Kanban_Board-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/users/antomihe/projects/5/)
 [![GitHub Container Registry](https://img.shields.io/badge/GitHub_Packages-Docker_Image-24292e?style=flat-square&logo=github&logoColor=white)](https://github.com/users/antomihe/packages/container/package/iwvg-devops-miguel-antonio)
 
