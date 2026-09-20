@@ -1,11 +1,6 @@
 package es.upm.miw.devops.infrastructure.data.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,8 +27,14 @@ public class User {
 
     private String familyName;
 
+    @Builder.Default
     @Column(name = "active")
-    private Boolean isActive;
+    private Boolean isActive = false;
+
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role = Role.USER;
 
     public String fullName() {
         return this.name + " " + this.familyName;

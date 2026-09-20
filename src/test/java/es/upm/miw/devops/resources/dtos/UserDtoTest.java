@@ -1,5 +1,6 @@
 package es.upm.miw.devops.resources.dtos;
 
+import es.upm.miw.devops.infrastructure.data.models.Role;
 import es.upm.miw.devops.infrastructure.data.models.User;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +19,7 @@ class UserDtoTest {
                 .name("Alice")
                 .familyName("Smith")
                 .isActive(true)
+                .role(Role.ADMIN)
                 .build();
 
         UserDto dto = new UserDto(user);

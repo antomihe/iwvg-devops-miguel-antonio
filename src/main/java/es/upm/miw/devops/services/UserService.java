@@ -1,6 +1,7 @@
 package es.upm.miw.devops.services;
 
 import es.upm.miw.devops.infrastructure.data.daos.UserRepository;
+import es.upm.miw.devops.infrastructure.data.models.Role;
 import es.upm.miw.devops.infrastructure.data.models.User;
 import es.upm.miw.devops.services.criteria.UserFindCriteria;
 import es.upm.miw.devops.services.exceptions.ConflictException;
@@ -38,6 +39,11 @@ public class UserService {
         if (!existingUser.getMobile().equals(user.getMobile())) {
             this.assertMobileNotExist(user.getMobile());
         }
+
+        if (Role.ADMIN.equals(existingUser.getRole())) {
+            throw new ConflictException("Admin user cannot be deactivated: " + existingUser.getId());
+        }
+
         BeanUtils.copyProperties(user, existingUser, "id");
         return this.userRepository.save(existingUser);
     }
