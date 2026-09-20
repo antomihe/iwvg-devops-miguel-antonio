@@ -15,3 +15,13 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: false
+
+springdoc:
+  # ⚠️ ADVERTENCIA DE SEGURIDAD (Entorno Académico)
+  # Se mantienen 'enabled: true' para facilitar la evaluación y uso educativo de Swagger.
+  # En un entorno de producción real, ambas propiedades DEBEN estar en 'false' para evitar
+  # exponer la documentación de la API públicamente.
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true

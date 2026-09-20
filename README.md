@@ -1,25 +1,49 @@
 ## [Máster en Ingeniería Web por la Universidad Politécnica de Madrid (miw-upm)](http://miw.etsisi.upm.es)
 ## Ingeniería Web: Visión General (IWVG) DevOps
 > Este proyecto es un apoyo docente de la asignatura. Cada release liberada corresponde al código utilizado en clase del curso indicado
+<!-- Badges Generales e Información del Repositorio -->
+[![GitHub License](https://img.shields.io/github/license/antomihe/iwvg-devops-miguel-antonio?color=blue&style=flat-square)](https://github.com/antomihe/iwvg-devops-miguel-antonio/blob/develop/LICENSE.md)
+[![Latest Release](https://img.shields.io/github/v/release/antomihe/iwvg-devops-miguel-antonio?color=blue&style=flat-square)](https://github.com/antomihe/iwvg-devops-miguel-antonio/releases)
+[![Release Date](https://img.shields.io/github/release-date/antomihe/iwvg-devops-miguel-antonio?color=blue&style=flat-square)](https://github.com/antomihe/iwvg-devops-miguel-antonio/releases)
+[![Code Size](https://img.shields.io/github/languages/code-size/antomihe/iwvg-devops-miguel-antonio?style=flat-square)](https://github.com/antomihe/iwvg-devops-miguel-antonio)
+[![Open Issues](https://img.shields.io/github/issues/antomihe/iwvg-devops-miguel-antonio?color=important&style=flat-square)](https://github.com/antomihe/iwvg-devops-miguel-antonio/issues)
+[![Closed Issues](https://img.shields.io/github/issues-closed/antomihe/iwvg-devops-miguel-antonio?color=informational&style=flat-square)](https://github.com/antomihe/iwvg-devops-miguel-antonio/issues?q=is%3Aissue+is%3Aclosed)
 
-[![GitHub](https://img.shields.io/github/license/antomihe/iwvg-devops-miguel-antonio?color=informational)](https://github.com/antomihe/iwvg-devops-miguel-antonio/blob/develop/LICENSE.md)
-[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/antomihe/iwvg-devops-miguel-antonio?color=informational)](https://github.com/antomihe/iwvg-devops-miguel-antonio/releases)
-![GitHub Release Date](https://img.shields.io/github/release-date/antomihe/iwvg-devops-miguel-antonio?color=informational)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/antomihe/iwvg-devops-miguel-antonio)
-![GitHub issues](https://img.shields.io/github/issues/antomihe/iwvg-devops-miguel-antonio?color=important)
-![GitHub closed issues](https://img.shields.io/github/issues-closed/antomihe/iwvg-devops-miguel-antonio?color=informational)
+<!-- Gestión y Registro de Paquetes -->
+[![GitHub Projects](https://img.shields.io/badge/GitHub_Projects-Kanban_Board-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/users/antomihe/projects/5/)
+[![GitHub Container Registry](https://img.shields.io/badge/GitHub_Packages-Docker_Image-24292e?style=flat-square&logo=github&logoColor=white)](https://github.com/users/antomihe/packages/container/package/iwvg-devops-miguel-antonio)
 
-### Estado del código
-[![DevOps](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-integration.yml)
+___
+
+### Estado del código y despliegues
+
+#### CI/CD & Calidad
+[![CI](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-integration.yml)
+[![CD Staging](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-deployment-staging.yml/badge.svg)](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-deployment-staging.yml)
+[![CD Master](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-deployment-master.yml/badge.svg)](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-deployment-master.yml)
+[![CD Master DB](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-deployment-master-db.yml/badge.svg)](https://github.com/antomihe/iwvg-devops-miguel-antonio/actions/workflows/continuous-deployment-master-db.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=antomihe_iwvg-devops-miguel-antonio&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=antomihe_iwvg-devops-miguel-antonio)
-[![Render broken](https://iwvg-devops-miguel-antonio.onrender.com/version-badge)](https://iwvg-devops-miguel-antonio.onrender.com/swagger-ui/index.html#/)
 
+#### Entornos Activos
+[![Render Staging](https://iwvg-devops-miguel-antonio.onrender.com/version-badge-staging)](https://iwvg-devops-miguel-antonio.onrender.com/swagger-ui/index.html#/)
+[![AWS Production Deploy](http://13.38.65.71/version-badge)](http://13.38.65.71/swagger-ui/index.html)
+
+___
+
+> [!WARNING]
+> **Entorno de Staging (Render):** Debido al uso del plan gratuito de hosting, la instancia entra en estado de suspensión (*spin-down*) tras periodos de inactividad. La carga inicial del badge de Render o la apertura de la interfaz de Swagger UI pueden demorarse entre **30 y 60 segundos** mientras el contenedor se reactiva.
+
+> [!NOTE]
+> **Exposición de Swagger UI / OpenAPI:** Por el carácter educativo y evaluable de esta práctica, las interfaces de **Swagger UI** (`/swagger-ui/index.html`) y la especificación **OpenAPI** (`/v3/api-docs`) se mantienen **habilitadas en todos los entornos** (`enabled: true`). En un escenario de despliegue profesional en producción, estas propiedades deben configurarse a `false` o limitarse a redes internas.
+
+___
 
 ### Tecnologías necesarias
 `Java` `Maven` `GitHub` `GitHub Actions` `Sonarcloud` `Slack` `Spring-Boot` `GitHub Packages` `Docker` `OpenAPI`
 ### :gear: Configuración de Variables de Entorno (`.env`)
-
 El proyecto utiliza variables de entorno para evitar registrar credenciales o secretos en el código fuente.
+
+___
 
 ### :gear: Instalación del proyecto
 1. Clonar el repositorio en tu equipo, **mediante consola**:
