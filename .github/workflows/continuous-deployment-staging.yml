@@ -1,4 +1,4 @@
-name: CD PRE
+name: CD STAGING
 on:
   push:
     branches: ['staging']
