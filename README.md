@@ -100,10 +100,7 @@ docker compose up --build -d
 
 * Cliente Web: `http://localhost:8080`
 
-### :book: Diapositivas
-* [Diapositivas de DevOps](docs/miw-iwvg-devops-slides.pdf)
-
-### :dvd: [Plantilla de la práctica en _docs/iwvg-devops-template.zip_](docs/iwvg-devops-template.zip)
+___
 
 ### :page_with_curl: IWVG. Devops. Enunciado de la práctica
 > Todo el software deberá estar en ingles.
@@ -167,6 +164,3 @@ Se crearán las siguientes 2 historias (**Feature**).
 ### :clap: Entraga de la práctica
 Indicar como texto en la subida la **URL de GitHub**
 > **NOTA. Acordarse de dar al botón de envío**
-
-Ejemplo resuelto:
-![](./docs/miw-iwvg-devops-demo.png)
