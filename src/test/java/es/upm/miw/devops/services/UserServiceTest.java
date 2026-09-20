@@ -1,6 +1,7 @@
 package es.upm.miw.devops.services;
 
 import es.upm.miw.devops.infrastructure.data.daos.UserRepository;
+import es.upm.miw.devops.infrastructure.data.models.Role;
 import es.upm.miw.devops.infrastructure.data.models.User;
 import es.upm.miw.devops.services.criteria.UserFindCriteria;
 import es.upm.miw.devops.services.exceptions.ConflictException;
@@ -42,6 +43,7 @@ class UserServiceTest {
                 .name("John")
                 .familyName("Doe")
                 .isActive(true)
+                .role(Role.USER)
                 .build();
     }
 
@@ -53,6 +55,7 @@ class UserServiceTest {
         User created = this.userService.create(this.user);
 
         assertThat(created).isNotNull();
+        assertThat(created.getId()).isNull();
         assertThat(created.getMobile()).isEqualTo("600000001");
         verify(this.userRepository).save(any(User.class));
     }
@@ -129,6 +132,18 @@ class UserServiceTest {
     }
 
     @Test
+    void testUpdateConflictAdminUser() {
+        this.user.setRole(Role.ADMIN);
+        when(this.userRepository.findById(this.id)).thenReturn(Optional.of(this.user));
+
+        User updatedUser = User.builder().mobile("600000001").name("Jane").build();
+
+        assertThatThrownBy(() -> this.userService.update(this.id, updatedUser))
+                .isInstanceOf(ConflictException.class)
+                .hasMessageContaining("Admin user cannot be deactivated");
+    }
+
+    @Test
     void testUpdateActive() {
         when(this.userRepository.findById(this.id)).thenReturn(Optional.of(this.user));
         when(this.userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
@@ -140,12 +155,17 @@ class UserServiceTest {
 
     @Test
     void testUpdateActiveList() {
+        UUID secondId = UUID.randomUUID();
+        User secondUser = User.builder().id(secondId).isActive(false).build();
+
         when(this.userRepository.findById(this.id)).thenReturn(Optional.of(this.user));
+        when(this.userRepository.findById(secondId)).thenReturn(Optional.of(secondUser));
         when(this.userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
 
-        List<User> result = this.userService.updateActiveList(List.of(this.user));
+        List<User> result = this.userService.updateActiveList(List.of(this.user, secondUser));
 
-        assertThat(result).hasSize(1);
+        assertThat(result).hasSize(2);
+        verify(this.userRepository, times(2)).save(any(User.class));
     }
 
     @Test
@@ -181,5 +201,23 @@ class UserServiceTest {
 
         List<User> all = this.userService.findByCriteria(UserFindCriteria.builder().isBillable(null).build());
         assertThat(all).hasSize(2);
+    }
+
+    @Test
+    void testFindByCriteriaIsBillableNullAndBlankBranches() {
+        User userNullName = User.builder().name(null).familyName("Doe").mobile("600000001").build();
+        User userBlankName = User.builder().name("   ").familyName("Doe").mobile("600000001").build();
+        User userNullFamilyName = User.builder().name("John").familyName(null).mobile("600000001").build();
+        User userBlankFamilyName = User.builder().name("John").familyName("   ").mobile("600000001").build();
+        User userNullMobile = User.builder().name("John").familyName("Doe").mobile(null).build();
+        User userBlankMobile = User.builder().name("John").familyName("Doe").mobile("   ").build();
+
+        when(this.userRepository.findAll()).thenReturn(List.of(
+                userNullName, userBlankName, userNullFamilyName, userBlankFamilyName, userNullMobile, userBlankMobile
+        ));
+
+        List<User> result = this.userService.findByCriteria(UserFindCriteria.builder().isBillable(true).build());
+
+        assertThat(result).isEmpty();
     }
 }

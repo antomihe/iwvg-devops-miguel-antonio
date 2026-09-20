@@ -17,6 +17,7 @@ class UserTest {
                 .name("John")
                 .familyName("Doe")
                 .isActive(true)
+                .role(Role.ADMIN)
                 .build();
 
         assertThat(user.getId()).isEqualTo(id);
@@ -24,6 +25,7 @@ class UserTest {
         assertThat(user.getName()).isEqualTo("John");
         assertThat(user.getFamilyName()).isEqualTo("Doe");
         assertThat(user.getIsActive()).isTrue();
+        assertThat(user.getRole()).isEqualTo(Role.ADMIN);
     }
 
     @Test
